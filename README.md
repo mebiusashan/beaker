@@ -1,6 +1,6 @@
 <p align="center">
     <img src="./doc/beaker.png"
-         height="130">
+         height="300">
 </p>
 
 <p align="center">
