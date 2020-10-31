@@ -1,6 +1,6 @@
 # Beaker
 
-Beaker is a sample blog system.
+Beaker is a simple blog system.
 
 ## Platforms
 
