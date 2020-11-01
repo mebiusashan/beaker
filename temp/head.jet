@@ -1,0 +1,7 @@
+{{block head()}}
+<div id="head">
+       <div id="title">
+        <p><a href="{{ SITE_URL }}/">{{ SITE_NAME }}</a> {{ SITE_DES }}</p>
+       </div>
+      </div>
+{{end}}

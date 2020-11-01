@@ -1,0 +1,8 @@
+{{extends "postlayout.jet"}}
+{{block body()}}
+      <div id="context">
+       <div id="notfound">
+            404
+        </div>
+      </div>
+{{end}}

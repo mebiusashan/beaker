@@ -1,0 +1,17 @@
+{{extends "postlayout.jet"}}
+{{import "cat.jet"}}
+{{block body()}}
+
+{{yield cat()}}
+
+<div id="ls">
+   <div>Archives</div>
+        {{range value := arcs}}
+              <div id="item">
+                  <a href="{{SITE_URL}}/archives/{{value.ID}}">{{value.Title}}</a>
+                  {{timep(value.CreatedAt)}}
+                 </div>
+       {{end}}
+  </div>
+
+{{end}}

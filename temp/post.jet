@@ -1,0 +1,12 @@
+{{extends "postlayout.jet"}}
+{{block body()}}
+
+      <div id="context">
+      <div id="posttitle">{{title}}</div>
+
+       <div id="post">
+            {{ unsafe: body }}
+        </div>
+
+      </div>
+{{end}}

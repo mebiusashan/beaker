@@ -1,0 +1,14 @@
+{{import "./footer.jet"}}
+{{import "./header.jet"}}
+{{import "./head.jet"}}
+{{import "./js.jet"}}
+<!DOCTYPE html>
+<html>
+  {{yield header()}}
+ <body>
+ {{yield head()}}
+  {{yield body()}}
+    {{ yield footer() }}
+ </body>
+    {{ yield js() }}
+</html>

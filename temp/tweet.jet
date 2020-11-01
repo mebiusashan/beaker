@@ -1,0 +1,28 @@
+{{extends "postlayout.jet"}}
+{{import "cat.jet"}}
+{{block body()}}
+
+{{yield cat()}}
+
+<div id="tweet">
+    <div id="posttitle">Tweet</div>
+    <div>
+        {{range value := tws}}
+                  <div id="twblock">
+                      <div>{{value.Context}}</div>
+                      <div id="twtime">{{ttimep(value.CreatedAt)}}</div>
+                  </div>
+        {{end}}
+    </div>
+
+    <div id="twpage">
+        <ul class="pagination">
+            {{range value := twpages}}
+                <li><a {{if twcurpage==value}}class="active"{{end}} href="{{SITE_URL}}/tweet/{{value}}">{{value}}</a></li>
+            {{end}}
+        </ul>
+    </div>
+
+</div>
+
+{{end}}

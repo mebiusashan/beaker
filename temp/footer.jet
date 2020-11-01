@@ -1,0 +1,8 @@
+{{block footer()}}
+<div id="footer">
+    <hr />
+    {{if !ISINDEX }}<a href="{{ SITE_URL }}/">回首页</a>{{end}}
+    <br>
+    {{ SITE_FOOTER }}
+ </div>
+{{end}}

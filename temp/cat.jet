@@ -1,0 +1,20 @@
+{{block cat()}}
+<div id="cat">
+<div>Link</div>
+                <div>
+                  <a href="{{SITE_URL}}/tweet">Tweet</a>
+              </div>
+{{range value := pages}}
+              <div>
+                  <a href="{{SITE_URL}}/page/{{value.ID}}">{{value.Title}}</a>
+              </div>
+       {{end}}
+<br>
+    <div>Category</div>
+    {{range value := cats}}
+              <div>
+                  <a href="{{SITE_URL}}/category/{{value.Cname}}">{{value.Name}}</a>
+              </div>
+       {{end}}
+</div>
+{{end}}
