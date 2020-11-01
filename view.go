@@ -14,6 +14,7 @@ type ViewRender struct {
 	_SITE_URL      string
 	_SITE_DES      string
 	_SITE_FOOTER   string
+	_SITE_KEYWORDS string
 }
 
 func NewViewRender(templateFolder string) *ViewRender {
@@ -22,11 +23,12 @@ func NewViewRender(templateFolder string) *ViewRender {
 	return vr
 }
 
-func (r *ViewRender) SetDefaultVar(siteName string, siteURL string, siteDes string, siteFooter string) {
+func (r *ViewRender) SetDefaultVar(siteName string, siteURL string, siteDes string, siteFooter string, siteKeywords string) {
 	r._SITE_NAME = siteName
 	r._SITE_URL = siteURL
 	r._SITE_DES = siteDes
 	r._SITE_FOOTER = siteFooter
+	r._SITE_KEYWORDS = siteKeywords
 }
 
 func (r *ViewRender) GetVarMap() jet.VarMap {
@@ -34,6 +36,7 @@ func (r *ViewRender) GetVarMap() jet.VarMap {
 	vars.Set("SITE_NAME", r._SITE_NAME)
 	vars.Set("SITE_URL", r._SITE_URL)
 	vars.Set("SITE_DES", r._SITE_DES)
+	vars.Set("SITE_KEYWORDS", r._SITE_KEYWORDS)
 	vars.Set("SITE_FOOTER", r._SITE_FOOTER)
 	vars.Set("ISINDEX", false)
 	return vars

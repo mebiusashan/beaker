@@ -10,7 +10,7 @@ import (
 )
 
 func RunServer() {
-	path := os.Getenv("HBPATH")
+	path := os.Getenv("BEAKERPATH")
 	config, err := NewWithPath(path, 0x1B)
 	if err != nil {
 		fmt.Println(err)
@@ -28,7 +28,7 @@ func RunServer() {
 	model.SetMaxOpenConns(config.Database.MAX_OPEN_NUM)
 
 	vr := NewViewRender(config.Website.TEMP_FOLDER)
-	vr.SetDefaultVar(config.Website.SITE_NAME, config.Website.SITE_URL, config.Website.SITE_DES, config.Website.SITE_FOOTER)
+	vr.SetDefaultVar(config.Website.SITE_NAME, config.Website.SITE_URL, config.Website.SITE_DES, config.Website.SITE_FOOTER, config.Website.SITE_KEYWORDS)
 
 	ctr := NewCtrl()
 	ctr.SetCache(cac)

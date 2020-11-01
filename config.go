@@ -109,6 +109,7 @@ type Website struct {
 	TEMP_FOLDER        string
 	STATIC_FILE_FOLDER string
 	TWEET_NUM_ONE_PAGE uint
+	SITE_KEYWORDS      string
 }
 
 func (t *Website) check() error {

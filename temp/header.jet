@@ -4,7 +4,7 @@
     <title>{{ SITE_NAME }} - {{ title }}</title>
     <link rel="stylesheet" href="{{ SITE_URL }}/b.css" />
     <meta name="description" content="{{ SITE_DES }}" />
-    <meta name="keywords" content="技术,coder,golang,程序开发,程序,技术,vim,linux,php,egret,typescript,javascript,nodejs,flash,actionscript" />
+    <meta name="keywords" content="{{ SITE_KEYWORDS }}" />
    </head>
 {{end}}
 b
