@@ -65,3 +65,5 @@ sed -i 's/-DB_NAME/'$MySql_Database'/g' $ServerPath/admin.toml
 
 cp -r ./temp $ServerPath
 cp -r ./static $ServerPath
+cp ./beaker_admin $ServerPath
+cp ./beaker_server $ServerPath
