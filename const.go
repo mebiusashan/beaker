@@ -1,6 +1,6 @@
 package beaker
 
-const HOST string = "http://ashan.org:8886/"
+const HOST string = "http://localhost:9092"
 
 const SUCC int = 99
 const FAIL int = 1
