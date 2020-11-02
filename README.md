@@ -138,6 +138,31 @@ MAX_OPEN_NUM = 100
 
 You can change it.
 
+### PM2 config
+
+```
+module.exports = {
+  apps: [{
+    name: 'blog web server',
+    cwd: "/www/blog",
+    script: './beaker_server',
+    env: {
+	"BEAKERPATH":"/www/blog/config.toml"
+    },
+    watch: true
+  }, {
+    name: 'blog admin server',
+    cwd: "/www/blog",
+    script: './beaker_admin',
+    env: {
+	"BEAKERADMINPATH":"/www/blog/admin.toml"
+    },
+    watch: true
+  }]
+}
+
+```
+
 
 ## How to use
 
