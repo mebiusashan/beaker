@@ -192,16 +192,20 @@ func CMDPing() []byte {
 	resp, err := http.Post(HOST+"/user/ping", "", strings.NewReader(""))
 	if err != nil {
 		fmt.Println("ping", err)
+		CMDDelServer()
+		return nil
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("ping", err)
+		return nil
 	}
 
 	var jsonData SuccMsg
 	err = json.Unmarshal(body, &jsonData)
 	if err != nil {
 		fmt.Println("ping", err)
+		return nil
 	}
 
 	if jsonData.Code != SUCC {
@@ -333,7 +337,7 @@ func CMDCheck(serverDesKey []byte) bool {
 			//fmt.Println("check", err)
 		}
 		//fmt.Println(dir)
-		path := dir + "/.hbkey"
+		path := dir + "/.beakerkey"
 		err = ioutil.WriteFile(path, serverDesKey, 0666)
 		if err != nil {
 			//fmt.Println("check", err)
@@ -349,10 +353,42 @@ func CMDGetLocalKey() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	path := dir + "/.hbkey"
+	path := dir + "/.beakerkey"
 	key, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 	return key, nil
+}
+
+func CMDSetServer(server string) error {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0])) //exec.LookPath(os.Args[0])
+	if err != nil {
+		return err
+	}
+	path := dir + "/.beakerserver"
+	err = ioutil.WriteFile(path, []byte(server), 0666)
+	return err
+}
+
+func CMDGetServer() (string, error) {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0])) //exec.LookPath(os.Args[0])
+	if err != nil {
+		return "", err
+	}
+	path := dir + "/.beakerserver"
+	server, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return string(server), nil
+}
+
+func CMDDelServer() {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0])) //exec.LookPath(os.Args[0])
+	if err != nil {
+		return
+	}
+	path := dir + "/.beakerserver"
+	os.Remove(path)
 }

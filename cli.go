@@ -1,8 +1,27 @@
 package beaker
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func RunCli() {
+	server, serr := CMDGetServer()
+	if serr != nil {
+		fmt.Println("Please input your beaker blog admin url(like https://example.com:9092):")
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+		server = input.Text()
+		e := CMDSetServer(server)
+		if e != nil {
+			fmt.Println(e)
+			return
+		}
+	}
+
+	HOST = server
+
 	key, err := CMDGetLocalKey()
 	if err != nil {
 		///本地key没有或者错误，直接到登录
