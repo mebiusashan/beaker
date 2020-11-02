@@ -63,3 +63,5 @@ sed -i 's/-DB_USER/'$MySQL_Name'/g' $ServerPath/admin.toml
 sed -i 's/-DB_PW/'$MySQL_Password'/g' $ServerPath/admin.toml
 sed -i 's/-DB_NAME/'$MySql_Database'/g' $ServerPath/admin.toml
 
+cp -r ./temp $ServerPath
+cp -r ./static $ServerPath
