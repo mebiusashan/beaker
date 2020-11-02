@@ -41,6 +41,10 @@ func main(){
 
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o beaker_admin main.go
 rm main.go
+cp $WORKSPACE/install/* ./
+cp -r $WORKSPACE/static ./
+cp -r $WORKSPACE/temp ./
+
 
 # build darwin server & admin
 cd $WORKSPACE/bin
@@ -63,4 +67,6 @@ func main(){
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o beaker_admin main.go
 rm main.go
-
+cp $WORKSPACE/install/* ./
+cp -r $WORKSPACE/static ./
+cp -r $WORKSPACE/temp ./
