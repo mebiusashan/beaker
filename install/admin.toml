@@ -1,0 +1,25 @@
+[authinfo]
+Name="-Name"
+Password="-Password"
+ConfigPath="-ConfigPath/config.toml"
+ServerKeyDir="-ServerKey/keys/"
+ClientKeyDir="-ServerKey/keys/"
+
+[server]
+PORT = ":-PORT"
+URL = "localhost"
+
+[redis]
+REDIS_IP = "127.0.0.1"
+REDIS_PORT = "6379"
+REDIS_PREFIX = "beaker_"
+#设置7天的记录生命
+EXPIRE_TIME = 25200
+
+[database]
+DB_URL = "-DB_URL"
+DB_USER = "-DB_USER"
+DB_PW = "-DB_PW"
+DB_NAME = "-DB_NAME"
+MAX_IDLE_NUM = 10
+MAX_OPEN_NUM = 100
