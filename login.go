@@ -28,6 +28,8 @@ check: c <- 用c私有私钥加密用户名 <- s
 const SERVER_PUBLIC_KEY = "pub.pem"
 const SERVER_PRIVATE_KEY = "pri.pem"
 
+var loginKey string = ""
+
 func (ct *LoginCtrl) Ping(c *gin.Context) {
 	fmt.Println(ct.ctrl.mvc.config.AuthInfo.ServerKeyDir + SERVER_PUBLIC_KEY)
 	pubKey, err := ioutil.ReadFile(ct.ctrl.mvc.config.AuthInfo.ServerKeyDir + SERVER_PUBLIC_KEY)
@@ -80,17 +82,16 @@ func (ct *LoginCtrl) Login(c *gin.Context) {
 			//从redis里度des key，没有就创建
 			//用dk，加密 des key，发回去
 
-			desKey, err := ct.ctrl.mvc.cache.GET("dk", "dk")
-			if err != nil {
-				if err.Error() == "redigo: nil returned" {
-					key := cert.CreateDesKey()
-					fmt.Println("长---度", len(key))
-					desKey = base64.StdEncoding.EncodeToString(key)
-					ct.ctrl.mvc.cache.SETNX("dk", "dk", desKey, ct.ctrl.mvc.config.Redis.EXPIRE_TIME)
-				} else {
-					writeFail(c, err.Error())
-					return
-				}
+			// desKey, err := ct.ctrl.mvc.cache.GET("dk", "dk")
+			// if err != nil {
+
+			desKey := loginKey
+			if desKey == "" {
+				key := cert.CreateDesKey()
+				fmt.Println("长---度", len(key))
+				desKey = base64.StdEncoding.EncodeToString(key)
+				// ct.ctrl.mvc.cache.SETNX("dk", "dk", desKey, ct.ctrl.mvc.config.Redis.EXPIRE_TIME)
+				loginKey = desKey
 			}
 
 			key, _ := base64.StdEncoding.DecodeString(desKey)
@@ -136,10 +137,13 @@ func (ct *LoginCtrl) Check(c *gin.Context) {
 
 	fmt.Println("111收到的body", string(data))
 
-	desKey, err := ct.ctrl.mvc.cache.GET("dk", "dk")
-	if err != nil {
+	// desKey, err := ct.ctrl.mvc.cache.GET("dk", "dk")
+	// if err != nil {
+
+	desKey := loginKey
+	if desKey == "" {
 		fmt.Println("法师打发第三方", err)
-		writeFail(c, err.Error())
+		writeFail(c, "Need Login")
 		return
 	}
 
@@ -187,17 +191,17 @@ func (ct *LoginCtrl) Check(c *gin.Context) {
 func CMDPing() []byte {
 	resp, err := http.Post(HOST+"/user/ping", "", strings.NewReader(""))
 	if err != nil {
-		//fmt.Println("ping", err)
+		fmt.Println("ping", err)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		//fmt.Println("ping", err)
+		fmt.Println("ping", err)
 	}
 
 	var jsonData SuccMsg
 	err = json.Unmarshal(body, &jsonData)
 	if err != nil {
-		//fmt.Println("ping", err)
+		fmt.Println("ping", err)
 	}
 
 	if jsonData.Code != SUCC {
@@ -208,7 +212,7 @@ func CMDPing() []byte {
 	pubKeyStr := jsonData.Data.(string)
 	pubkey, err := cert.Base64Decode(pubKeyStr)
 	if err != nil {
-		//fmt.Println("ping", err)
+		fmt.Println("ping", err)
 	}
 
 	//fmt.Println(string(pubkey))
