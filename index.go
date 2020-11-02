@@ -30,7 +30,7 @@ func (ct *IndCtrl) Do(c *gin.Context) {
 	}
 
 	vars := ct.ctrl.mvc.view.GetVarMap()
-	vars.Set("title", "首页")
+	vars.Set("title", "Home")
 	vars.Set("cats", cats)
 	vars.Set("pages", pages)
 	vars.Set("arcs", arcs)
