@@ -56,7 +56,7 @@ func RunServer() {
 
 func RunAdmin() {
 
-	path := os.Getenv("HBADMINPATH")
+	path := os.Getenv("BEAKERADMINPATH")
 	config, err := NewWithPath(path, 0x1D)
 	if err != nil {
 		fmt.Println(err)
