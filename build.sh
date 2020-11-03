@@ -70,3 +70,8 @@ rm main.go
 cp $WORKSPACE/install/* ./
 cp -r $WORKSPACE/static ./
 cp -r $WORKSPACE/temp ./
+
+cd $WORKSPACE/bin
+tar -czvf beaker-v0.0.1-cli.tar.gz ./cli
+tar -czvf beaker-v0.0.1--linux-amd64.tar.gz ./linux
+tar -czvf beaker-v0.0.1-darwin-amd64.tar.gz ./darwin
