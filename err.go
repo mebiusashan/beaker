@@ -30,5 +30,5 @@ func (ct *ErrCtrl) Do404(c *gin.Context) {
 }
 
 func (ct *ErrCtrl) Do500(c *gin.Context) {
-	c.String(500, "500 系统内部错误")
+	c.String(500, "500 Server Error")
 }

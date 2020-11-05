@@ -134,7 +134,7 @@ func (ct *CatCtrl) Add(c *gin.Context) {
 		return
 	}
 	if postData.Name == "" || postData.Cname == "" {
-		writeFail(c, "不允许出现空值")
+		writeFail(c, GetLanguage("NotNull"))
 		return
 	}
 
@@ -145,7 +145,7 @@ func (ct *CatCtrl) Add(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "分类添加成功", nil)
+	writeSucc(c, GetLanguage("catAddSucc"), nil)
 }
 
 type CatDBDel struct {
@@ -174,7 +174,7 @@ func (ct *CatCtrl) Del(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "分类删除成功", nil)
+	writeSucc(c, GetLanguage("catDelSucc"), nil)
 }
 
 func (ct *CatCtrl) All(c *gin.Context) {
@@ -185,7 +185,7 @@ func (ct *CatCtrl) All(c *gin.Context) {
 	}
 
 	//ct.ctrl.mvcc.cache.ClearAll()
-	writeSucc(c, "所有分了", list)
+	writeSucc(c, GetLanguage("catall"), list)
 }
 
 func (ct *CatCtrl) Update(c *gin.Context) {
@@ -203,7 +203,7 @@ func (ct *CatCtrl) Update(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "分类修改成功", nil)
+	writeSucc(c, GetLanguage("CategoryModifiedSucc"), nil)
 }
 
 func CMDCatAll() {
@@ -228,7 +228,7 @@ func CMDCatAll() {
 	}
 
 	table := termtables.CreateTable()
-	table.AddHeaders("ID", "显示名", "路径名", "创建时间")
+	table.AddHeaders("ID", GetLanguage("showname"), GetLanguage("path"), GetLanguage("CreateTime"))
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
 		table.AddRow(uint(v["ID"].(float64)), v["Name"], v["Cname"], v["CreatedAt"])
@@ -238,18 +238,18 @@ func CMDCatAll() {
 
 func CMDCatAdd() {
 
-	fmt.Printf("请输入显示名：")
+	fmt.Printf(GetLanguage("EnterDisplayName"))
 	var name string
 	fmt.Scanln(&name)
 
-	fmt.Printf("请输入路径名：")
+	fmt.Printf(GetLanguage("EnterPath"))
 	var cname string
 	fmt.Scanln(&cname)
 
-	fmt.Printf("确认添加新分类么？" +
-		"\n显示名：\"" + name + "\"" +
-		"\n路径名:\"" + cname + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureAddCategory") +
+		"\n"+GetLanguage("showname")+":\"" + name + "\"" +
+		"\n"+GetLanguage("path")+":\"" + cname + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -283,31 +283,31 @@ func CMDCatAdd() {
 		return
 	}
 
-	fmt.Println("分类添加成功")
+	fmt.Println(GetLanguage("catAddSucc"))
 }
 
 func CMDCatDel() {
-	fmt.Printf("请输入要删除的分类ID：")
+	fmt.Printf(GetLanguage("EnterCatIDDel"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("请输入当前分类下文章移动到的分类ID：")
+	fmt.Printf(GetLanguage("moveCatId"))
 	var mvid uint
 	fmt.Scanln(&mvid)
 
 	if mvid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("确认删除分类么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureDelCategory") +
+		"\n"+GetLanguage("ConfirmInput")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -343,32 +343,32 @@ func CMDCatDel() {
 		return
 	}
 
-	fmt.Println("分类删除成功")
+	fmt.Println(GetLanguage("catDelSucc"))
 }
 
 func CMDCatEdit() {
-	fmt.Printf("请输入要修改的分类ID：")
+	fmt.Printf(GetLanguage("EnterCategoryIDModified"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("请输入显示名：")
+	fmt.Printf(GetLanguage("EnterDisplayName"))
 	var name string
 	fmt.Scanln(&name)
 
-	fmt.Printf("请输入路径名：")
+	fmt.Printf(GetLanguage("EnterPath"))
 	var cname string
 	fmt.Scanln(&cname)
 
-	fmt.Printf("确认修改分类么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n显示名：\"" + name + "\"" +
-		"\n路径名:\"" + cname + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("ConfirmModifyCategory") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("showname")+":\"" + name + "\"" +
+		"\n"+GetLanguage("path")+":\"" + cname + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -403,5 +403,5 @@ func CMDCatEdit() {
 		return
 	}
 
-	fmt.Println("分类修改成功")
+	fmt.Println(GetLanguage("CategoryModifiedSucc"))
 }

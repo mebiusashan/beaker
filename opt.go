@@ -24,7 +24,7 @@ func (ct *OptCtrl) Info(c *gin.Context) {
 
 func (ct *OptCtrl) ClearCache(c *gin.Context) {
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "清除缓存成功", nil)
+	writeSucc(c, GetLanguage("ClearCacheSucc"), nil)
 }
 
 func CMDClearAllCache() {
@@ -48,7 +48,7 @@ func CMDClearAllCache() {
 		return
 	}
 
-	fmt.Println("清除完成")
+	fmt.Println(GetLanguage("Done"))
 }
 
 func CMDSeeOpts() {
@@ -73,7 +73,7 @@ func CMDSeeOpts() {
 	}
 
 	table := termtables.CreateTable()
-	table.AddHeaders("项目", "值")
+	table.AddHeaders(GetLanguage("name"), GetLanguage("value"))
 	for k, v := range jsonData.Data.(map[string]interface{}) {
 		table.AddRow(k, v)
 		//fmt.Println(k, v)

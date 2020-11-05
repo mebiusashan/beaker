@@ -141,7 +141,7 @@ func (ct *TweCtrl) Add(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "tweet添加成功", nil)
+	writeSucc(c, GetLanguage("tweetAddSucc"), nil)
 }
 
 func (ct *TweCtrl) Del(c *gin.Context) {
@@ -158,7 +158,7 @@ func (ct *TweCtrl) Del(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "tweet删除成功", nil)
+	writeSucc(c, GetLanguage("tweetDelSucc"), nil)
 }
 
 type TweList struct {
@@ -200,7 +200,7 @@ func (ct *TweCtrl) List(c *gin.Context) {
 	postData.TotlePage = twNums
 	postData.List = tws
 
-	writeSucc(c, "tweet删除成功", postData)
+	writeSucc(c, GetLanguage("tweetDelSucc"), postData)
 }
 
 func CMDTweAll() {
@@ -237,28 +237,28 @@ func CMDTweAll() {
 	tablewriter.EnableUTF8()
 	table := tablewriter.CreateTable()
 	table.SetModeTerminal()
-	table.AddHeaders("ID", "内容", "创建时间")
+	table.AddHeaders("ID", GetLanguage("Content"), GetLanguage("CreateTime"))
 	for _, v := range dd["List"].([]interface{}) {
 		va := v.(map[string]interface{})
 		table.AddRow(uint(va["ID"].(float64)), va["Context"], va["CreatedAt"])
 	}
 	fmt.Println(table.Render())
-	fmt.Println("共", dd["TotlePage"], "页，", dd["TweNum"], "条，当前", dd["CurPage"], "页")
+	fmt.Println(dd["TotlePage"], " pages,", dd["TweNum"], "tweets, current ", dd["CurPage"], "page")
 }
 
 func CMDTweDel() {
-	fmt.Printf("请输入要删除的Tweet ID：")
+	fmt.Printf(GetLanguage("EnterTweetIDToDeleted"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("确认删除Tweet么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureDelTweet") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -293,11 +293,11 @@ func CMDTweDel() {
 		return
 	}
 
-	fmt.Println("Tweet删除成功")
+	fmt.Println(GetLanguage("tweetDelSucc"))
 }
 
 func CMDTweAdd() {
-	fmt.Printf("请输入Tweet内容：")
+	fmt.Printf(GetLanguage("EnterTweetContent"))
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -306,9 +306,9 @@ func CMDTweAdd() {
 	//var cname string
 	//fmt.Scanln(&cname)
 
-	fmt.Printf("确认添加Tweet么？" +
-		"\n内容：\"" + string(cname) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureAddTweet") +
+		"\n"+GetLanguage("Content")+":\"" + string(cname) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -342,5 +342,5 @@ func CMDTweAdd() {
 		return
 	}
 
-	fmt.Println("Tweet添加成功")
+	fmt.Println(GetLanguage("tweetAddSucc"))
 }

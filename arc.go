@@ -135,7 +135,7 @@ func (ct *ArcCtrl) Add(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "文章添加成功", nil)
+	writeSucc(c, GetLanguage("ArticlAddedSucc"), nil)
 }
 
 func (ct *ArcCtrl) Del(c *gin.Context) {
@@ -153,7 +153,7 @@ func (ct *ArcCtrl) Del(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "文章删除成功", nil)
+	writeSucc(c, GetLanguage("ArticleDelSucc"), nil)
 }
 
 func (ct *ArcCtrl) All(c *gin.Context) {
@@ -163,7 +163,7 @@ func (ct *ArcCtrl) All(c *gin.Context) {
 		return
 	}
 
-	writeSucc(c, "全部文章", arcs)
+	writeSucc(c, GetLanguage("AllArticle"), arcs)
 }
 
 func (ct *ArcCtrl) Down(c *gin.Context) {
@@ -180,7 +180,7 @@ func (ct *ArcCtrl) Down(c *gin.Context) {
 		return
 	}
 
-	writeSucc(c, "文章", arc)
+	writeSucc(c, GetLanguage("Article"), arc)
 }
 
 func CMDArcAll() {
@@ -205,7 +205,7 @@ func CMDArcAll() {
 	}
 
 	table := termtables.CreateTable()
-	table.AddHeaders("ID", "标题")
+	table.AddHeaders("ID", GetLanguage("Title"))
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
 		table.AddRow(uint(v["ID"].(float64)), v["Title"])
@@ -214,18 +214,18 @@ func CMDArcAll() {
 }
 
 func CMDArcDel() {
-	fmt.Printf("请输入要删除的文章ID：")
+	fmt.Printf(GetLanguage("EnterArticleIDToDel"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("确认删除文章么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureDeleteArticle") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -260,22 +260,22 @@ func CMDArcDel() {
 		return
 	}
 
-	fmt.Println("文章删除成功")
+	fmt.Println(GetLanguage("ArticleDelSucc"))
 }
 
 func CMDArcDown() {
-	fmt.Printf("请输入要下载的文章ID：")
+	fmt.Printf(GetLanguage("EnterIDArticleDownload"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("确认下载文章么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureDownloadArticle") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -315,48 +315,48 @@ func CMDArcDown() {
 	path = path + "/" + strconv.Itoa(int(data["ID"].(float64))) + "_" + data["Title"].(string) + ".md"
 	str := data["Context"].(string)
 	ioutil.WriteFile(path, []byte(str), 0666)
-	fmt.Println("文章下载成功，存储到：", path)
+	fmt.Println(GetLanguage("ArticleDownloadedSucceAndIn"), path)
 }
 
 func CMDArcAdd() {
 
 	if len(os.Args) < 2 {
-		fmt.Println("缺少md文件")
+		fmt.Println(GetLanguage("mdFileNotFound"))
 		return
 	}
 
 	mdPath := os.Args[1]
 	if mdPath == "" {
-		fmt.Println("没有找到md文件")
+		fmt.Println(GetLanguage("mdFileNotFound"))
 		return
 	}
 
 	has, err := PathExists(mdPath)
 	if err != nil || !has {
-		fmt.Println("没有找到md文件")
+		fmt.Println(GetLanguage("mdFileNotFound"))
 		return
 	}
 
-	fmt.Printf("请输入文章分类ID：")
+	fmt.Printf(GetLanguage("EnterArticleCategoryID"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("请输入单页标题：")
+	fmt.Printf(GetLanguage("EnterArticleTitle"))
 
 	reader := bufio.NewReader(os.Stdin)
 
 	title, _, _ := reader.ReadLine()
 
-	fmt.Printf("确认添加Tweet么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n单页标题：\"" + string(title) + "\"" +
-		"\n内容文件：\"" + string(mdPath) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureAddeteArc") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("Title")+":\"" + string(title) + "\"" +
+		"\n"+GetLanguage("Content")+":\"" + string(mdPath) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -397,5 +397,5 @@ func CMDArcAdd() {
 		return
 	}
 
-	fmt.Println("文章添加成功")
+	fmt.Println(GetLanguage("ArticlAddedSucc"))
 }

@@ -58,14 +58,14 @@ func (ct *LoginCtrl) Login(c *gin.Context) {
 		writeFail(c, err.Error())
 		return
 	}
-	fmt.Println("收到的数据", string(data))
+	// fmt.Println("收到的数据", string(data))
 
 	data, err = cert.Base64Decode(string(data))
 	if err != nil {
 		fmt.Println("error:", err)
 		return
 	}
-	fmt.Println("收到的数据", string(data))
+	// fmt.Println("收到的数据", string(data))
 
 	var jsonData LoginReq
 	err = json.Unmarshal(data, &jsonData)
@@ -88,36 +88,36 @@ func (ct *LoginCtrl) Login(c *gin.Context) {
 			desKey := loginKey
 			if desKey == "" {
 				key := cert.CreateDesKey()
-				fmt.Println("长---度", len(key))
+				// fmt.Println("长---度", len(key))
 				desKey = base64.StdEncoding.EncodeToString(key)
 				// ct.ctrl.mvc.cache.SETNX("dk", "dk", desKey, ct.ctrl.mvc.config.Redis.EXPIRE_TIME)
 				loginKey = desKey
 			}
 
 			key, _ := base64.StdEncoding.DecodeString(desKey)
-			fmt.Println("生成base64的key1111", desKey)
+			// fmt.Println("生成base64的key1111", desKey)
 
 			clientDesKey64, err := cert.Base64Decode(jsonData.DK)
 			if err != nil {
-				writeFail(c, "解密失败0："+err.Error())
+				writeFail(c, GetLanguage("DecodingFailed")+err.Error())
 				return
 			}
 
 			clientDesKey, err := cert.RSADecrypt(pri, []byte(clientDesKey64))
 			if err != nil {
-				writeFail(c, "解密失败1："+err.Error())
+				writeFail(c, GetLanguage("DecodingFailed")+err.Error())
 				return
 			}
 
 			serverDesKeyM, err := cert.TripleDesEncrypt(key, clientDesKey)
 			if err != nil {
-				writeFail(c, "解密失败2："+err.Error())
+				writeFail(c, GetLanguage("DecodingFailed")+err.Error())
 				return
 			}
 
 			serverDesKey64 := cert.Base64Encode(serverDesKeyM)
 
-			fmt.Println("发送的加密Key", serverDesKey64)
+			// fmt.Println("发送的加密Key", serverDesKey64)
 			writeSucc(c, "", serverDesKey64)
 		}
 	}
@@ -135,23 +135,23 @@ func (ct *LoginCtrl) Check(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("111收到的body", string(data))
+	// fmt.Println("111收到的body", string(data))
 
 	// desKey, err := ct.ctrl.mvc.cache.GET("dk", "dk")
 	// if err != nil {
 
 	desKey := loginKey
 	if desKey == "" {
-		fmt.Println("法师打发第三方", err)
+		// fmt.Println("法师打发第三方", err)
 		writeFail(c, "Need Login")
 		return
 	}
 
-	fmt.Println("2222查到的key", desKey)
+	// fmt.Println("2222查到的key", desKey)
 
 	key, err := base64.StdEncoding.DecodeString(desKey)
 	if err != nil {
-		fmt.Println("redis 读取base64错误", err)
+		// fmt.Println("redis 读取base64错误", err)
 		writeFail(c, err.Error())
 		return
 	}
@@ -164,18 +164,18 @@ func (ct *LoginCtrl) Check(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("data64:::", data64)
+	// fmt.Println("data64:::", data64)
 
 	//dd, _ := base64.StdEncoding.DecodeString(string(data))
 	//fmt.Println("解码body", string(dd))
 
 	sl, err := cert.TripleDesDecrypt(data64, key)
 	if err != nil {
-		fmt.Println("解密错误", err)
+		// fmt.Println("解密错误", err)
 		writeFail(c, err.Error())
 		return
 	}
-	fmt.Println("解密后", string(sl))
+	// fmt.Println("解密后", string(sl))
 
 	sl123 := string(sl) + "123"
 
@@ -229,11 +229,11 @@ func CMDLogin(pubKey []byte) []byte {
 	var fusername string
 	var fpassword string
 
-	fmt.Printf("请输入用户名:")
+	fmt.Printf(GetLanguage("username"))
 
 	fmt.Scanln(&fusername)
 
-	fmt.Printf("请输入密码:")
+	fmt.Printf(GetLanguage("password"))
 	fmt.Scanln(&fpassword)
 
 	clientDesKey := cert.CreateDesKey()
@@ -290,7 +290,7 @@ func CMDLogin(pubKey []byte) []byte {
 }
 
 func CMDCheck(serverDesKey []byte) bool {
-	T := []byte("HackerBlog------====------")
+	T := []byte("beaker------====------")
 	//fmt.Println("加密用的key", cert.Base64Encode(serverDesKey))
 	desT, err := cert.TripleDesEncrypt(T, serverDesKey)
 	if err != nil {

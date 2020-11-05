@@ -28,7 +28,7 @@ const def_Website_SITE_NAME = "Beaker"
 const def_Website_SITE_DES = "Beaker is a simple blog system."
 
 //默认footer内容
-const def_Website_SITE_FOOTER = "自豪的采用Golang"
+const def_Website_SITE_FOOTER = "Beaker is a simple blog system."
 
 //默认首页显示记录数
 const def_Website_INDEX_LIST_NUM = 10

@@ -114,7 +114,7 @@ func (ct *PagCtrl) Add(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "单页添加成功", nil)
+	writeSucc(c, GetLanguage("PageAddSucc"), nil)
 }
 
 func (ct *PagCtrl) Del(c *gin.Context) {
@@ -131,7 +131,7 @@ func (ct *PagCtrl) Del(c *gin.Context) {
 	}
 
 	ct.ctrl.mvc.cache.ClearAll()
-	writeSucc(c, "单页删除成功", nil)
+	writeSucc(c, GetLanguage("PageDelSucc"), nil)
 }
 
 func (ct *PagCtrl) List(c *gin.Context) {
@@ -183,7 +183,7 @@ func CMDPagAll() {
 	}
 
 	table := termtables.CreateTable()
-	table.AddHeaders("ID", "标题")
+	table.AddHeaders("ID", GetLanguage("Title"))
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
 		table.AddRow(uint(v["ID"].(float64)), v["Title"])
@@ -192,18 +192,18 @@ func CMDPagAll() {
 }
 
 func CMDPagDel() {
-	fmt.Printf("请输入要删除的单页ID：")
+	fmt.Printf(GetLanguage("EnterIDPageToDel"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("确认删除单页么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureDeletePage") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -238,22 +238,22 @@ func CMDPagDel() {
 		return
 	}
 
-	fmt.Println("单页删除成功")
+	fmt.Println(GetLanguage("PageDelSucc"))
 }
 
 func CMDPagDown() {
-	fmt.Printf("请输入要下载的单页ID：")
+	fmt.Printf(GetLanguage("EnterIDPageToDownloaded"))
 	var delid uint
 	fmt.Scanln(&delid)
 
 	if delid == 0 {
-		fmt.Println("ID错误")
+		fmt.Println(GetLanguage("IDError"))
 		return
 	}
 
-	fmt.Printf("确认下载单页么？" +
-		"\n分类ID：\"" + strconv.Itoa(int(delid)) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureDownloadPage") +
+		"\n"+GetLanguage("CategoryID")+":\"" + strconv.Itoa(int(delid)) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -293,38 +293,38 @@ func CMDPagDown() {
 	path = path + "/" + strconv.Itoa(int(data["ID"].(float64))) + "_" + data["Title"].(string) + ".md"
 	str := data["Context"].(string)
 	ioutil.WriteFile(path, []byte(str), 0666)
-	fmt.Println("文章下载成功，存储到：", path)
+	fmt.Println(GetLanguage("ArticleDownloadedSucceAndIn"), path)
 }
 
 func CMDPagAdd() {
 
 	if len(os.Args) < 2 {
-		fmt.Println("缺少md文件")
+		fmt.Println(GetLanguage("mdFileNotFound"))
 		return
 	}
 
 	mdPath := os.Args[1]
 	if mdPath == "" {
-		fmt.Println("没有找到md文件")
+		fmt.Println(GetLanguage("mdFileNotFound"))
 		return
 	}
 
 	has, err := PathExists(mdPath)
 	if err != nil || !has {
-		fmt.Println("没有找到md文件")
+		fmt.Println(GetLanguage("mdFileNotFound"))
 		return
 	}
 
-	fmt.Printf("请输入单页标题：")
+	fmt.Printf(GetLanguage("EnterPageTitle"))
 
 	reader := bufio.NewReader(os.Stdin)
 
 	title, _, _ := reader.ReadLine()
 
-	fmt.Printf("确认添加Tweet么？" +
-		"\n单页标题：\"" + string(title) + "\"" +
-		"\n内容文件：\"" + string(mdPath) + "\"" +
-		"\n确认输入（y or n）:")
+	fmt.Printf(GetLanguage("AreYouSureAddetePage") +
+		"\n"+GetLanguage("Title")+":\"" + string(title) + "\"" +
+		"\n"+GetLanguage("Content")+":\"" + string(mdPath) + "\"" +
+		"\n"+GetLanguage("ConfirmInput"))
 	var yes string
 	fmt.Scanln(&yes)
 
@@ -364,5 +364,5 @@ func CMDPagAdd() {
 		return
 	}
 
-	fmt.Println("单页添加成功")
+	fmt.Println(GetLanguage("PageAddSucc"))
 }

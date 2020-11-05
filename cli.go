@@ -48,32 +48,14 @@ func login() {
 	}
 	rel := CMDCheck(sk)
 	if rel {
-		fmt.Println("登录成功")
+		fmt.Println( GetLanguage("loginSucc"))
 	} else {
-		fmt.Println("登录失败")
+		fmt.Println( GetLanguage("loginfail"))
 	}
 }
 
 func printHelp() {
-	fmt.Printf("请选择操作，输入编号即可。" +
-		"\n[1]  文章列表" +
-		"\n[2]  删除文章" +
-		"\n[3]  添加文章" +
-		"\n[4]  下载文章" +
-		"\n[5]  查看单页" +
-		"\n[6]  删除单页" +
-		"\n[7]  添加单页" +
-		"\n[8]  下载单页" +
-		"\n[9]  添加tweet" +
-		"\n[10] 查看tweet" +
-		"\n[11] 删除tweet" +
-		"\n[12] 查看分类" +
-		"\n[13] 添加分类" +
-		"\n[14] 修改分类" +
-		"\n[15] 删除分类" +
-		"\n[16] 查看选项" +
-		"\n[17] 清除缓存" +
-		"\n请选择操作:")
+	fmt.Printf(GetLanguage("PleaseSelectOperation"))
 
 	var action string
 	_, _ = fmt.Scanln(&action)
@@ -113,6 +95,6 @@ func printHelp() {
 	case "17":
 		CMDClearAllCache()
 	default:
-		fmt.Println("选择无效")
+		fmt.Println(GetLanguage("InvalidInstruction"))
 	}
 }
