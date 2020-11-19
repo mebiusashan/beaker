@@ -26,3 +26,7 @@ func ArtRm(host string, id uint) {
 
 	net.PostJson(host+net.CLI_ART_RM, strings.NewReader(string(jsonByte)))
 }
+
+func ArtAdd(host string, content string, title string, cid uint) {
+
+}

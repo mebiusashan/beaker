@@ -40,3 +40,7 @@ func CatRm(host string, id uint, mid uint) {
 
 	net.PostJson(host+net.CLI_CAT_RM, strings.NewReader(string(jsonByte)))
 }
+
+func CatAdd(host string, name string, alias string) {
+
+}

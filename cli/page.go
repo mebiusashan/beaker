@@ -35,3 +35,7 @@ func PageRm(host string, id uint) {
 
 	net.PostJson(host+net.CLI_PAGE_RM, strings.NewReader(string(jsonByte)))
 }
+
+func PageAdd(host string, content string, title string) {
+
+}

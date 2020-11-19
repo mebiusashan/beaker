@@ -42,3 +42,7 @@ func TweetRm(host string, id uint) {
 
 	net.PostJson(host+net.CLI_TWEET_RM, strings.NewReader(string(jsonByte)))
 }
+
+func TweetAdd(host string, message string) {
+
+}
