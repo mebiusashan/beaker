@@ -1,30 +1,15 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
 
-	"github.com/mebiusashan/beaker/common"
+	"github.com/mebiusashan/beaker/net"
 )
 
 func OptAll(host string) {
-	resp, err := http.Post(host+"/admin/opt", "", strings.NewReader(""))
-	common.Assert(err)
-	body, err := ioutil.ReadAll(resp.Body)
-	common.Assert(err)
-
-	var jsonData common.SuccMsg
-	err = json.Unmarshal(body, &jsonData)
-	common.Assert(err)
-
-	if jsonData.Code != common.SUCC {
-		common.Err(jsonData.Msg)
-		return
-	}
+	jsonData := net.PostJson(host+"/admin/opt", strings.NewReader(""))
 
 	max := 0
 	for k := range jsonData.Data.(map[string]interface{}) {
