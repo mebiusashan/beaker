@@ -4,9 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/mebiusashan/beaker/cmd"
 )
 
 func RunCli() {
+	cmd.Execute()
+
+	return
 	server, serr := CMDGetServer()
 	if serr != nil {
 		fmt.Println("Please input your beaker blog admin url(like https://example.com:9092):")
@@ -48,9 +53,9 @@ func login() {
 	}
 	rel := CMDCheck(sk)
 	if rel {
-		fmt.Println( GetLanguage("loginSucc"))
+		fmt.Println(GetLanguage("loginSucc"))
 	} else {
-		fmt.Println( GetLanguage("loginfail"))
+		fmt.Println(GetLanguage("loginfail"))
 	}
 }
 
