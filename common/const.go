@@ -2,6 +2,8 @@ package common
 
 import "github.com/jinzhu/gorm"
 
+const VERSION string = "v0.1.0"
+
 const SUCC int = 99
 const FAIL int = 1
 const CONFIG_NOT_FOUND int = 2
