@@ -13,7 +13,11 @@ var lwCmd = &cobra.Command{
 	Long: `This command can view all 
 blog information stored locally`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Total number of sites:", len(localConfig.Websites))
+		l := len(localConfig.Websites)
+		fmt.Println("Total number of sites:", l)
+		if l == 0 {
+			return
+		}
 		fmt.Println("Default Website:", localConfig.DefaultWebsite)
 		fmt.Println("-----------------------------")
 		max := 0
