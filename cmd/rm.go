@@ -29,7 +29,15 @@ var (
 				cli.ArtRm(getWebsiteInfo().HOST, uint(id))
 				return
 			}
-
+			if pagerm {
+				if len(args) == 0 {
+					common.Err("Missing ID parameter")
+				}
+				id, err := strconv.Atoi(args[0])
+				common.Assert(err)
+				cli.PageRm(getWebsiteInfo().HOST, uint(id))
+				return
+			}
 		},
 	}
 )

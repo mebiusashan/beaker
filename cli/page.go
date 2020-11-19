@@ -1,10 +1,12 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/mebiusashan/beaker/common"
 	"github.com/mebiusashan/beaker/net"
 )
 
@@ -23,4 +25,13 @@ func PageAll(host string) {
 		v := va.(map[string]interface{})
 		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %s\n", uint(v["ID"].(float64)), v["Title"])
 	}
+}
+
+func PageRm(host string, id uint) {
+	sendData := common.ArcDB{}
+	sendData.ID = id
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
+
+	net.PostJson(host+net.CLI_PAGE_RM, strings.NewReader(string(jsonByte)))
 }

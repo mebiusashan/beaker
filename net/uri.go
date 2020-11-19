@@ -11,3 +11,4 @@ const CLI_PING string = "/user/ping"
 const CLI_CLEAN string = "/admin/clr/cache"
 
 const CLI_ART_RM string = "/admin/arc/del"
+const CLI_PAGE_RM string = "/admin/pag/del"
