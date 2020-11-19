@@ -1,10 +1,12 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/mebiusashan/beaker/common"
 	"github.com/mebiusashan/beaker/net"
 )
 
@@ -27,4 +29,14 @@ func CatAll(host string) {
 		v := va.(map[string]interface{})
 		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %-"+strconv.Itoa(maxcname)+"s %s\n", uint(v["ID"].(float64)), v["Cname"], v["Name"])
 	}
+}
+
+func CatRm(host string, id uint, mid uint) {
+	sendData := common.CatDBDel{}
+	sendData.ID = id
+	sendData.MvID = mid
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
+
+	net.PostJson(host+net.CLI_CAT_RM, strings.NewReader(string(jsonByte)))
 }

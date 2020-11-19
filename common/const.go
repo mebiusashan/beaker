@@ -84,3 +84,13 @@ type ArcDB struct {
 	Title   string
 	Context string
 }
+
+type CatDBDel struct {
+	CatDB
+	MvID uint
+}
+type CatDB struct {
+	gorm.Model
+	Cname string
+	Name  string
+}

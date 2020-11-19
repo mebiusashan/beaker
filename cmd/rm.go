@@ -48,6 +48,17 @@ var (
 				return
 			}
 
+			if categoryrm {
+				if len(args) < 2 {
+					common.Err("Missing ID parameter")
+				}
+				id, err := strconv.Atoi(args[0])
+				common.Assert(err)
+				mid, err := strconv.Atoi(args[1])
+				common.Assert(err)
+				cli.CatRm(getWebsiteInfo().HOST, uint(id), uint(mid))
+				return
+			}
 		},
 	}
 )
