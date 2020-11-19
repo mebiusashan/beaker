@@ -9,7 +9,7 @@ var rmCmd = &cobra.Command{
 	Short: "Delete some content from the blog",
 	Long:  `You can delete articles, single pages, Tweets and categories in the blog`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		checkWebsite()
 	},
 }
 

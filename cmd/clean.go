@@ -14,6 +14,7 @@ server's cache. If you modify the blog's
 template or some settings, you need to 
 execute clean to clear the server's cache.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		checkWebsite()
 		cli.CleanCache(getWebsiteInfo(actionWebsite).HOST)
 	},
 }

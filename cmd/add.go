@@ -10,7 +10,7 @@ var addCmd = &cobra.Command{
 	Long: `You can add articles, single 
 pages, Tweets and categories to the blog`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		checkWebsite()
 	},
 }
 
