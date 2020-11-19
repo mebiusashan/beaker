@@ -77,3 +77,10 @@ type TweetDB struct {
 	gorm.Model
 	Context string
 }
+
+type ArcDB struct {
+	gorm.Model
+	Catid   uint
+	Title   string
+	Context string
+}
