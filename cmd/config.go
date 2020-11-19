@@ -66,29 +66,7 @@ verified after adding`,
 					common.Err("Duplicate host")
 				}
 			}
-
-			//need login with current website
-			//if success login, set info and server key to config file
-			//if it's default website, need reset all website config
-			pubKey := cli.Ping(url)
-			serverPubKey := cli.Login(url, pubKey, addWebSiteUser, addWebSitePassword)
-			if cli.Check(url, serverPubKey) {
-				if len(localConfig.Websites) == 0 || localConfig.Websites == nil {
-					localConfig.Websites = make([]websiteConfig, 0)
-					addWebSiteIsDefault = true
-				}
-				if addWebSiteIsDefault {
-					localConfig.DefaultWebsite = addWebSiteAlias
-				}
-				d := websiteConfig{Alias: addWebSiteAlias, HOST: url, Key: string(serverPubKey)}
-
-				localConfig.Websites = append(localConfig.Websites, d)
-				viper.Set("config", localConfig)
-				err := viper.WriteConfig()
-				common.Assert(err)
-			} else {
-				fmt.Println("login fail")
-			}
+			login(url, addWebSiteUser, addWebSitePassword)
 		},
 	}
 
@@ -110,12 +88,24 @@ website information as the default website`,
 				}
 				if localConfig.Websites[i].Alias == alias {
 					localConfig.Websites = append(localConfig.Websites[:i], localConfig.Websites[i+1:]...)
-					viper.Set("config", localConfig)
-					err := viper.WriteConfig()
-					common.Assert(err)
+					writeConfig()
 					return
 				}
 			}
+		},
+	}
+
+	loginCmd = &cobra.Command{
+		Use:   "login",
+		Short: "Log in to the website",
+		Long: `When the website login expires, 
+use the login command to log in again and obtain 
+operation permissions`,
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			alias := args[0]
+			info := getWebsiteInfoWithAlias(alias)
+			login(info.HOST, addWebSiteUser, addWebSitePassword)
 		},
 	}
 )
@@ -126,8 +116,12 @@ func init() {
 	addWebSiteCmd.PersistentFlags().StringVarP(&addWebSitePassword, "password", "p", "", "blog administrator account password")
 	addWebSiteCmd.PersistentFlags().BoolVarP(&addWebSiteIsDefault, "defalut", "d", false, "set as default blog")
 
+	loginCmd.PersistentFlags().StringVarP(&addWebSiteUser, "user", "u", "", "blog administrator account name")
+	loginCmd.PersistentFlags().StringVarP(&addWebSitePassword, "password", "p", "", "blog administrator account password")
+
 	configCmd.AddCommand(addWebSiteCmd)
 	configCmd.AddCommand(rmWebsiteCmd)
+	configCmd.AddCommand(loginCmd)
 }
 
 func initConfig() {
@@ -158,16 +152,57 @@ func checkWebsite() {
 }
 
 func getWebsiteInfo() *websiteConfig {
-	if actionWebsite == "" || actionWebsite == "default" {
-		actionWebsite = localConfig.DefaultWebsite
+	return getWebsiteInfoWithAlias(actionWebsite)
+}
+
+func getWebsiteInfoWithAlias(alias string) *websiteConfig {
+	if alias == "" || alias == "default" {
+		alias = localConfig.DefaultWebsite
 	}
 
 	for _, d := range localConfig.Websites {
-		if d.Alias == actionWebsite {
+		if d.Alias == alias {
 			return &d
 		}
 	}
 
 	common.Err(actionWebsite + " website information does not exist")
 	return nil
+}
+
+func login(url string, username string, password string) {
+	//need login with current website
+	//if success login, set info and server key to config file
+	//if it's default website, need reset all website config
+	pubKey := cli.Ping(url)
+	serverPubKey := cli.Login(url, pubKey, username, password)
+	if cli.Check(url, serverPubKey) {
+		if len(localConfig.Websites) == 0 || localConfig.Websites == nil {
+			localConfig.Websites = make([]websiteConfig, 0)
+			addWebSiteIsDefault = true
+		}
+		if addWebSiteIsDefault {
+			localConfig.DefaultWebsite = addWebSiteAlias
+		}
+
+		for _, v := range localConfig.Websites {
+			if v.HOST == url {
+				v.Key = string(serverPubKey)
+				writeConfig()
+				return
+			}
+		}
+
+		d := websiteConfig{Alias: addWebSiteAlias, HOST: url, Key: string(serverPubKey)}
+		localConfig.Websites = append(localConfig.Websites, d)
+		writeConfig()
+	} else {
+		fmt.Println("login fail")
+	}
+}
+
+func writeConfig() {
+	viper.Set("config", localConfig)
+	err := viper.WriteConfig()
+	common.Assert(err)
 }
