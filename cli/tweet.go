@@ -33,3 +33,12 @@ func TweetAll(host string, curPage uint) {
 	fmt.Println("---------------------------------------")
 	fmt.Println(dd["TotlePage"], "pages,", dd["TweNum"], "tweets, current", dd["CurPage"], "page")
 }
+
+func TweetRm(host string, id uint) {
+	sendData := common.ArcDB{}
+	sendData.ID = id
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
+
+	net.PostJson(host+net.CLI_TWEET_RM, strings.NewReader(string(jsonByte)))
+}

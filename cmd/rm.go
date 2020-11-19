@@ -38,6 +38,16 @@ var (
 				cli.PageRm(getWebsiteInfo().HOST, uint(id))
 				return
 			}
+			if tweetrm {
+				if len(args) == 0 {
+					common.Err("Missing ID parameter")
+				}
+				id, err := strconv.Atoi(args[0])
+				common.Assert(err)
+				cli.TweetRm(getWebsiteInfo().HOST, uint(id))
+				return
+			}
+
 		},
 	}
 )
