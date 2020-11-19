@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
-	"github.com/apcera/termtables"
 	"github.com/mebiusashan/beaker/common"
 )
 
@@ -26,10 +26,14 @@ func OptAll(host string) {
 		return
 	}
 
-	table := termtables.CreateTable()
-	table.AddHeaders("name", "value")
-	for k, v := range jsonData.Data.(map[string]interface{}) {
-		table.AddRow(k, v)
+	max := 0
+	for k := range jsonData.Data.(map[string]interface{}) {
+		if len(k) > max {
+			max = len(k)
+		}
 	}
-	fmt.Println(table.Render())
+	for k, v := range jsonData.Data.(map[string]interface{}) {
+		fmt.Printf("%-"+strconv.Itoa(max)+"s ", k)
+		fmt.Println(v)
+	}
 }

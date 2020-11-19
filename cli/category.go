@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
-	"github.com/apcera/termtables"
 	"github.com/mebiusashan/beaker/common"
 )
 
@@ -22,15 +22,22 @@ func CatAll(host string) {
 	common.Assert(err)
 
 	if jsonData.Code != common.SUCC {
-		fmt.Println(jsonData.Msg)
-		return
+		common.Err(jsonData.Msg)
 	}
-
-	table := termtables.CreateTable()
-	table.AddHeaders("ID", "showname", "path", "CreateTime")
+	maxid := 0
+	maxcname := 0
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
-		table.AddRow(uint(v["ID"].(float64)), v["Name"], v["Cname"], v["CreatedAt"])
+		l := len(strconv.Itoa(int(v["ID"].(float64))))
+		if maxid < l {
+			maxid = l
+		}
+		if maxcname < len(v["Cname"].(string)) {
+			maxcname = len(v["Cname"].(string))
+		}
 	}
-	fmt.Println(table.Render())
+	for _, va := range jsonData.Data.([]interface{}) {
+		v := va.(map[string]interface{})
+		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %-"+strconv.Itoa(maxcname)+"s %s\n", uint(v["ID"].(float64)), v["Cname"], v["Name"])
+	}
 }

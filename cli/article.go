@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/apcera/termtables"
 	"github.com/mebiusashan/beaker/common"
 )
 
@@ -26,11 +25,8 @@ func ArtAll(host string) {
 		common.Err(jsonData.Msg)
 	}
 
-	table := termtables.CreateTable()
-	table.AddHeaders("ID", "Title")
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
-		table.AddRow(uint(v["ID"].(float64)), v["Title"])
+		fmt.Printf("%-5d%s\n", uint(v["ID"].(float64)), v["Title"])
 	}
-	fmt.Println(table.Render())
 }

@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"strconv"
+
 	"github.com/mebiusashan/beaker/cli"
+	"github.com/mebiusashan/beaker/common"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +30,13 @@ return all the corresponding data`,
 				cli.PageAll(getWebsiteInfo(actionWebsite).HOST)
 			}
 			if tweetls {
-				cli.TweetAll(getWebsiteInfo(actionWebsite).HOST)
+				var curPage int = 0
+				if len(args) > 0 {
+					var err error
+					curPage, err = strconv.Atoi(args[0])
+					common.Assert(err)
+				}
+				cli.TweetAll(getWebsiteInfo(actionWebsite).HOST, uint(curPage))
 			}
 			if categoryls {
 				cli.CatAll(getWebsiteInfo(actionWebsite).HOST)

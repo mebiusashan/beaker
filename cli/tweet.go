@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/mebiusashan/beaker/common"
-	"github.com/xlab/tablewriter"
 )
 
-func TweetAll(host string) {
-	postData := common.TweList{CurPage: 0}
+func TweetAll(host string, curPage uint) {
+	postData := common.TweList{CurPage: curPage}
 	jsonByte, err := json.Marshal(postData)
 	common.Assert(err)
 
@@ -32,14 +32,18 @@ func TweetAll(host string) {
 
 	dd := jsonData.Data.(map[string]interface{})
 
-	tablewriter.EnableUTF8()
-	table := tablewriter.CreateTable()
-	table.SetModeTerminal()
-	table.AddHeaders("ID", "CreateTime", "Content")
-	for _, v := range dd["List"].([]interface{}) {
-		va := v.(map[string]interface{})
-		table.AddRow(uint(va["ID"].(float64)), va["CreatedAt"], va["Context"])
+	maxid := 0
+	for _, va := range dd["List"].([]interface{}) {
+		v := va.(map[string]interface{})
+		l := len(strconv.Itoa(int(v["ID"].(float64))))
+		if maxid < l {
+			maxid = l
+		}
 	}
-	fmt.Println(table.Render())
-	fmt.Println(dd["TotlePage"], " pages,", dd["TweNum"], "tweets, current ", dd["CurPage"], "page")
+	for _, va := range dd["List"].([]interface{}) {
+		v := va.(map[string]interface{})
+		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %s\n", uint(v["ID"].(float64)), v["Context"])
+	}
+	fmt.Println("---------------------------------------")
+	fmt.Println(dd["TotlePage"], "pages,", dd["TweNum"], "tweets, current", dd["CurPage"], "page")
 }
