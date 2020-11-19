@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/mebiusashan/beaker/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +14,6 @@ server's cache. If you modify the blog's
 template or some settings, you need to 
 execute clean to clear the server's cache.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v0.1.0")
+		cli.CleanCache(getWebsiteInfo(actionWebsite).HOST)
 	},
 }
