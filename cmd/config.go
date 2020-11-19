@@ -91,6 +91,33 @@ verified after adding`,
 			}
 		},
 	}
+
+	rmWebsiteCmd = &cobra.Command{
+		Use:   "rmw",
+		Short: "Remove a website information",
+		Long: `Remove a website information in 
+the local record, if the website is the default 
+website, set the first one of the remaining 
+website information as the default website`,
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			alias := args[0]
+			isDefault := localConfig.DefaultWebsite == alias
+			for i := 0; i < len(localConfig.Websites); i++ {
+				if isDefault && localConfig.Websites[i].Alias != alias {
+					localConfig.DefaultWebsite = localConfig.Websites[i].Alias
+					isDefault = false
+				}
+				if localConfig.Websites[i].Alias == alias {
+					localConfig.Websites = append(localConfig.Websites[:i], localConfig.Websites[i+1:]...)
+					viper.Set("config", localConfig)
+					err := viper.WriteConfig()
+					common.Assert(err)
+					return
+				}
+			}
+		},
+	}
 )
 
 func init() {
@@ -100,6 +127,7 @@ func init() {
 	addWebSiteCmd.PersistentFlags().BoolVarP(&addWebSiteIsDefault, "defalut", "d", false, "set as default blog")
 
 	configCmd.AddCommand(addWebSiteCmd)
+	configCmd.AddCommand(rmWebsiteCmd)
 }
 
 func initConfig() {
