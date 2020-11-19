@@ -14,7 +14,7 @@ pages, Tweets and categories to the blog`,
 	},
 }
 
-func initAdd() {
+func init() {
 	addCmd.PersistentFlags().BoolP("article", "a", false, "Select action article")
 	addCmd.PersistentFlags().BoolP("page", "p", false, "Select action page")
 	addCmd.PersistentFlags().BoolP("tweet", "t", false, "Select action tweet")

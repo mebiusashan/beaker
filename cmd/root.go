@@ -1,18 +1,12 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
 	// Used for flags.
-	cfgFile     string
-	userLicense string
+	cfgFile string
 
 	rootCmd = &cobra.Command{
 		Use:   "beaker",
@@ -40,10 +34,6 @@ func init() {
 	// viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
 	// viper.SetDefault("author", "NAME HERE <EMAIL ADDRESS>")
 	// viper.SetDefault("license", "apache")
-	initAdd()
-	initRm()
-	initModify()
-	initLs()
 
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(rmCmd)
@@ -53,32 +43,4 @@ func init() {
 	rootCmd.AddCommand(configCmd)
 	rootCmd.AddCommand(lsCmd)
 	rootCmd.AddCommand(lwCmd)
-}
-
-func er(msg interface{}) {
-	fmt.Println("Error:", msg)
-	os.Exit(1)
-}
-
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			er(err)
-		}
-
-		fmt.Println(home)
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".beaker")
-	}
-
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
 }

@@ -15,7 +15,7 @@ return all the corresponding data`,
 	},
 }
 
-func initLs() {
+func init() {
 	lsCmd.PersistentFlags().BoolP("article", "a", false, "Select action article")
 	lsCmd.PersistentFlags().BoolP("page", "p", false, "Select action page")
 	lsCmd.PersistentFlags().BoolP("tweet", "t", false, "Select action tweet")

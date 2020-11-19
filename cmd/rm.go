@@ -13,7 +13,7 @@ var rmCmd = &cobra.Command{
 	},
 }
 
-func initRm() {
+func init() {
 	rmCmd.PersistentFlags().BoolP("article", "a", false, "Select action article")
 	rmCmd.PersistentFlags().BoolP("page", "p", false, "Select action page")
 	rmCmd.PersistentFlags().BoolP("tweet", "t", false, "Select action tweet")
