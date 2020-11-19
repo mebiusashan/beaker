@@ -124,17 +124,17 @@ func checkWebsite() {
 	}
 }
 
-func getWebsiteInfo(alias string) *websiteConfig {
-	if alias == "" || alias == "default" {
-		alias = localConfig.DefaultWebsite
+func getWebsiteInfo() *websiteConfig {
+	if actionWebsite == "" || actionWebsite == "default" {
+		actionWebsite = localConfig.DefaultWebsite
 	}
 
 	for _, d := range localConfig.Websites {
-		if d.Alias == alias {
+		if d.Alias == actionWebsite {
 			return &d
 		}
 	}
 
-	common.Err(alias + " website information does not exist")
+	common.Err(actionWebsite + " website information does not exist")
 	return nil
 }

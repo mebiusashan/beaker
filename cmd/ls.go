@@ -24,10 +24,10 @@ return all the corresponding data`,
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
 			if articlels {
-				cli.ArtAll(getWebsiteInfo(actionWebsite).HOST)
+				cli.ArtAll(getWebsiteInfo().HOST)
 			}
 			if pagels {
-				cli.PageAll(getWebsiteInfo(actionWebsite).HOST)
+				cli.PageAll(getWebsiteInfo().HOST)
 			}
 			if tweetls {
 				var curPage int = 0
@@ -36,13 +36,13 @@ return all the corresponding data`,
 					curPage, err = strconv.Atoi(args[0])
 					common.Assert(err)
 				}
-				cli.TweetAll(getWebsiteInfo(actionWebsite).HOST, uint(curPage))
+				cli.TweetAll(getWebsiteInfo().HOST, uint(curPage))
 			}
 			if categoryls {
-				cli.CatAll(getWebsiteInfo(actionWebsite).HOST)
+				cli.CatAll(getWebsiteInfo().HOST)
 			}
 			if optionls {
-				cli.OptAll(getWebsiteInfo(actionWebsite).HOST)
+				cli.OptAll(getWebsiteInfo().HOST)
 			}
 		},
 	}

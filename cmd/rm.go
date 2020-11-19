@@ -26,9 +26,10 @@ var (
 				}
 				id, err := strconv.Atoi(args[0])
 				common.Assert(err)
-				cli.ArtRm(getWebsiteInfo(actionWebsite).HOST, uint(id))
+				cli.ArtRm(getWebsiteInfo().HOST, uint(id))
 				return
 			}
+
 		},
 	}
 )
