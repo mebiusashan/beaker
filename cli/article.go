@@ -8,7 +8,7 @@ import (
 )
 
 func ArtAll(host string) {
-	jsonData := net.PostJson(host+"/admin/arc/list", strings.NewReader(""))
+	jsonData := net.PostJson(host+net.CLI_ART_LIST, strings.NewReader(""))
 
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})

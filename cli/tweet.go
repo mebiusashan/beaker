@@ -15,7 +15,7 @@ func TweetAll(host string, curPage uint) {
 	jsonByte, err := json.Marshal(postData)
 	common.Assert(err)
 
-	jsonData := net.PostJson(host+"/admin/twe/list", strings.NewReader(string(jsonByte)))
+	jsonData := net.PostJson(host+net.CLI_TWEET_LIST, strings.NewReader(string(jsonByte)))
 	dd := jsonData.Data.(map[string]interface{})
 
 	maxid := 0

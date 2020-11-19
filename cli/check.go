@@ -13,7 +13,7 @@ func Check(host string, serverDesKey []byte) bool {
 	desT, err := cert.TripleDesEncrypt(T, serverDesKey)
 	common.Assert(err)
 
-	jsonData := net.PostJson(host+"/admin/check", strings.NewReader(cert.Base64Encode(desT)))
+	jsonData := net.PostJson(host+net.CLI_CHECK, strings.NewReader(cert.Base64Encode(desT)))
 
 	rel64, err := cert.Base64Decode(jsonData.Data.(string))
 	common.Assert(err)

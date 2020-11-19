@@ -20,7 +20,7 @@ func Login(host string, pubKey []byte, username string, password string) []byte 
 	common.Assert(err)
 
 	jsonStr := cert.Base64Encode(jsonByte)
-	jsonData := net.PostJson(host+"/user/login", strings.NewReader(jsonStr))
+	jsonData := net.PostJson(host+net.CLI_LOGIN, strings.NewReader(jsonStr))
 
 	serverDesKeyM, err := cert.Base64Decode(jsonData.Data.(string))
 	common.Assert(err)

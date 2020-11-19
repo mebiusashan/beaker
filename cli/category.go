@@ -9,7 +9,7 @@ import (
 )
 
 func CatAll(host string) {
-	jsonData := net.PostJson(host+"/admin/cat/list", strings.NewReader(""))
+	jsonData := net.PostJson(host+net.CLI_CAT_LIST, strings.NewReader(""))
 
 	maxid := 0
 	maxcname := 0

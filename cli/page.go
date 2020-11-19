@@ -9,7 +9,7 @@ import (
 )
 
 func PageAll(host string) {
-	jsonData := net.PostJson(host+"/admin/pag/list", strings.NewReader(""))
+	jsonData := net.PostJson(host+net.CLI_PAGE_LIST, strings.NewReader(""))
 
 	maxid := 0
 	for _, va := range jsonData.Data.([]interface{}) {

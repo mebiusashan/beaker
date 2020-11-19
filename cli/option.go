@@ -9,7 +9,7 @@ import (
 )
 
 func OptAll(host string) {
-	jsonData := net.PostJson(host+"/admin/opt", strings.NewReader(""))
+	jsonData := net.PostJson(host+net.CLI_OPTION, strings.NewReader(""))
 
 	max := 0
 	for k := range jsonData.Data.(map[string]interface{}) {
