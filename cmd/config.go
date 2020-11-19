@@ -11,7 +11,19 @@ import (
 	"github.com/spf13/viper"
 )
 
+type websiteConfig struct {
+	Alias string
+	HOST  string
+	Key   string
+}
+
+type config struct {
+	DefaultWebsite string
+	Websites       []websiteConfig
+}
+
 var (
+	localConfig         config
 	addWebSiteAlias     string
 	addWebSiteUser      string
 	addWebSitePassword  string
@@ -23,6 +35,7 @@ var (
 		Long: `The configuration command can 
 set your blog background address`,
 		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Help()
 		},
 	}
 
@@ -36,18 +49,20 @@ verified after adding`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			url := args[0]
-			if !govalidator.IsURL(url) || !govalidator.IsIP(url) {
+			if !govalidator.IsURL(url) && !govalidator.IsIP(url) {
 				common.Err("Blog address format error")
 			}
 
-			//check current config , has duplicate config
-			website := viper.GetString(addWebSiteAlias)
-			if website != "" {
-				common.Err("Duplicate alias")
+			if addWebSiteAlias == "" {
+				common.Err("Alias ​​cannot be empty")
 			}
-			allsettings := viper.AllSettings()
-			for _, data := range allsettings {
-				if data == url {
+
+			//check current config , has duplicate config
+			for _, website := range localConfig.Websites {
+				if website.Alias == addWebSiteAlias {
+					common.Err("Duplicate alias")
+				}
+				if website.HOST == url {
 					common.Err("Duplicate host")
 				}
 			}
@@ -58,25 +73,25 @@ verified after adding`,
 			pubKey := cli.Ping(url)
 			serverPubKey := cli.Login(url, pubKey, addWebSiteUser, addWebSitePassword)
 			if cli.Check(url, serverPubKey) {
-				viper.Set(addWebSiteAlias, url)
-				viper.Set(addWebSiteAlias+"key", serverPubKey)
-				if addWebSiteIsDefault {
-					viper.Set("defaulutWebsite", addWebSiteAlias)
+				if len(localConfig.Websites) == 0 || localConfig.Websites == nil {
+					localConfig.Websites = make([]websiteConfig, 0)
+					addWebSiteIsDefault = true
 				}
-				viper.SafeWriteConfig()
+				if addWebSiteIsDefault {
+					localConfig.DefaultWebsite = addWebSiteAlias
+				}
+				d := websiteConfig{Alias: addWebSiteAlias, HOST: url, Key: string(serverPubKey)}
+
+				localConfig.Websites = append(localConfig.Websites, d)
+				viper.Set("config", localConfig)
+				err := viper.WriteConfig()
+				common.Assert(err)
 			} else {
 				fmt.Println("login fail")
 			}
 		},
 	}
 )
-
-// type websiteConfig struct {
-// 	IsDefault bool
-// 	Name      string
-// 	HOST      string
-// 	Key       string
-// }
 
 func init() {
 	addWebSiteCmd.PersistentFlags().StringVarP(&addWebSiteAlias, "alias", "a", "", "blog alias")
@@ -99,11 +114,6 @@ func initConfig() {
 	err = viper.ReadInConfig()
 	common.Assert(err)
 
-	// fmt.Println(viper.GetString("license"))
-	// viper.SafeWriteConfig()
-	// website := viper.GetStringMap("website")
-	// if website == nil || len(website) == 0 {
-	// 	er("No blog information is configured. Please check the help for the config command.")
-	// }
-
+	err = viper.UnmarshalKey("config", &localConfig)
+	common.Assert(err)
 }
