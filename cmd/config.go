@@ -150,6 +150,11 @@ func checkWebsite() {
 	if len(localConfig.Websites) == 0 {
 		common.Err("No website information is configured")
 	}
+	info := getWebsiteInfo()
+	rel := cli.Check(info.HOST, []byte(info.Key))
+	if !rel {
+		fmt.Println("Login invalid, please login again")
+	}
 }
 
 func getWebsiteInfo() *websiteConfig {
