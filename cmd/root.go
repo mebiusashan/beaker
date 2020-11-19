@@ -5,8 +5,7 @@ import (
 )
 
 var (
-	// Used for flags.
-	cfgFile string
+	actionWebsite string
 
 	rootCmd = &cobra.Command{
 		Use:   "beaker",
@@ -24,7 +23,7 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringP("website", "w", "default", "Set the blog you want to push, the blog can be set in the config command")
+	rootCmd.PersistentFlags().StringVarP(&actionWebsite, "website", "w", "default", "Set the blog you want to push, the blog can be set in the config command")
 	rootCmd.PersistentFlags().BoolP("refresh", "r", true, "refresh server cache")
 	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
 	// rootCmd.PersistentFlags().StringP("author", "a", "YOUR NAME", "author name for copyright attribution")

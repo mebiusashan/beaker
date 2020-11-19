@@ -1,5 +1,7 @@
 package common
 
+import "github.com/jinzhu/gorm"
+
 const SUCC int = 99
 const FAIL int = 1
 const CONFIG_NOT_FOUND int = 2
@@ -60,4 +62,16 @@ type LoginReq struct {
 	DK string
 	UN string
 	PW string
+}
+
+type TweList struct {
+	BaseMsg
+	CurPage   uint
+	TotlePage uint
+	TweNum    uint
+	List      []TweetDB
+}
+type TweetDB struct {
+	gorm.Model
+	Context string
 }

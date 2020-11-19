@@ -117,3 +117,24 @@ func initConfig() {
 	err = viper.UnmarshalKey("config", &localConfig)
 	common.Assert(err)
 }
+
+func checkWebsite() {
+	if len(localConfig.Websites) == 0 {
+		common.Err("No website information is configured")
+	}
+}
+
+func getWebsiteInfo(alias string) *websiteConfig {
+	if alias == "" || alias == "default" {
+		alias = localConfig.DefaultWebsite
+	}
+
+	for _, d := range localConfig.Websites {
+		if d.Alias == alias {
+			return &d
+		}
+	}
+
+	common.Err(alias + " website information does not exist")
+	return nil
+}
