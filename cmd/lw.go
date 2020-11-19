@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +13,17 @@ var lwCmd = &cobra.Command{
 	Long: `This command can view all 
 blog information stored locally`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		fmt.Println("Total number of sites:", len(localConfig.Websites))
+		fmt.Println("Default Website:", localConfig.DefaultWebsite)
+		fmt.Println("-----------------------------")
+		max := 0
+		for _, d := range localConfig.Websites {
+			if len(d.Alias) > max {
+				max = len(d.Alias)
+			}
+		}
+		for _, d := range localConfig.Websites {
+			fmt.Printf("%-"+strconv.Itoa(max)+"s %s\n", d.Alias, d.HOST)
+		}
 	},
 }
