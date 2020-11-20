@@ -222,9 +222,10 @@ func login(url string, username string, password string) {
 			localConfig.DefaultWebsite = addWebSiteAlias
 		}
 
-		for _, v := range localConfig.Websites {
+		for i := 0; i < len(localConfig.Websites); i++ {
+			v := localConfig.Websites[i]
 			if v.HOST == url {
-				v.Key = string(serverPubKey)
+				localConfig.Websites[i].Key = string(serverPubKey)
 				writeConfig()
 				return
 			}
