@@ -43,3 +43,18 @@ func PageAdd(host string, content string, title string) {
 
 	net.PostJson(host+net.CLI_PAGE_ADD, strings.NewReader(string(jsonByte)))
 }
+
+func PageDownload(host string, id uint) (string, string) {
+	sendData := common.ArcDB{}
+	sendData.ID = id
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
+
+	jsonData := net.PostJson(host+net.CLI_PAGE_DOWN, strings.NewReader(string(jsonByte)))
+	data := jsonData.Data.(map[string]interface{})
+	return data["Title"].(string), data["Context"].(string)
+}
+
+func PageModify(host string, id uint, title string, content string) {
+
+}

@@ -69,6 +69,29 @@ pages, and categories to the blog`,
 			cli.ArtModify(getWebsiteInfo().HOST, uint(id), modifyCatId, modifyTitle, string(newContent))
 		},
 	}
+
+	modifyPageCmd = &cobra.Command{
+		Use:   "page",
+		Short: "sda",
+		Long:  `afas`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			// checkWebsite()
+			id, err := strconv.Atoi(args[0])
+			common.Assert(err)
+			curPath, err := os.Getwd()
+			common.Assert(err)
+			title, content := cli.PageDownload(getWebsiteInfo().HOST, uint(id))
+			curPath = curPath + "/" + title + ".md"
+			err = ioutil.WriteFile(curPath, []byte(content), 0666)
+			common.Assert(err)
+			runEditor(curPath)
+			//edit file complete, push file
+			newContent, err := ioutil.ReadFile(curPath)
+			common.Assert(err)
+			cli.PageModify(getWebsiteInfo().HOST, uint(id), modifyTitle, string(newContent))
+		},
+	}
 )
 
 func init() {
@@ -77,10 +100,13 @@ func init() {
 	modifyCatCmd.PersistentFlags().StringVarP(&modifyCatAlias, "alias", "a", "", "alias of the category")
 
 	modifyArtCmd.PersistentFlags().UintVarP(&modifyCatId, "catid", "i", 0, "category ID of the article")
-	modifyArtCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", 0, "title of the article")
+	modifyArtCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the article")
+
+	modifyPageCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the page")
 
 	modifyCmd.AddCommand(modifyArtCmd)
 	modifyCmd.AddCommand(modifyCatCmd)
+	modifyCmd.AddCommand(modifyPageCmd)
 }
 
 func runEditor(path string) {
