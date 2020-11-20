@@ -44,5 +44,9 @@ func TweetRm(host string, id uint) {
 }
 
 func TweetAdd(host string, message string) {
+	sendData := common.TweetDB{Context: message}
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
 
+	net.PostJson(host+net.CLI_TWEET_ADD, strings.NewReader(string(jsonByte)))
 }

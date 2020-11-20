@@ -82,10 +82,16 @@ ID of the classification to which the chapter belongs`,
 
 	addTweetCmd = &cobra.Command{
 		Use:   "tweet",
-		Short: "",
-		Long:  ``,
+		Short: "Add a tweet",
+		Long: `To send a tweet immediately, you 
+need to write the content to be sent in the message tag`,
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
+
+			if addTweetMsg == "" {
+				common.Err("Message cannot be empty")
+			}
+			cli.TweetAdd(getWebsiteInfo().HOST, addTweetMsg)
 		},
 	}
 
