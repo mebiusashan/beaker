@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/mebiusashan/beaker/cli"
@@ -36,7 +37,27 @@ var (
 		Long: `The configuration command can 
 set your blog background address`,
 		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Help()
+			editor := common.DefaultEditor
+			if localConfig.Editor != "" {
+				editor = localConfig.Editor
+			}
+			fmt.Println("Editor:", editor)
+			l := len(localConfig.Websites)
+			fmt.Println("Total number of sites:", l)
+			if l == 0 {
+				return
+			}
+			fmt.Println("Default Website:", localConfig.DefaultWebsite)
+			fmt.Println("-----------------------------")
+			max := 0
+			for _, d := range localConfig.Websites {
+				if len(d.Alias) > max {
+					max = len(d.Alias)
+				}
+			}
+			for _, d := range localConfig.Websites {
+				fmt.Printf("%-"+strconv.Itoa(max)+"s %s\n", d.Alias, d.HOST)
+			}
 		},
 	}
 
