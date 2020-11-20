@@ -15,6 +15,7 @@ var (
 	modifyCatId    uint
 	modifyCatAlias string
 	modifyTitle    string
+	modifyDelFile  bool
 
 	modifyCmd = &cobra.Command{
 		Use:   "modify",
@@ -28,8 +29,10 @@ pages, and categories to the blog`,
 
 	modifyCatCmd = &cobra.Command{
 		Use:   "category",
-		Short: "asdf",
-		Long:  `asdfa`,
+		Short: "Modify category information",
+		Long: `To modify the existing classification information, 
+you need to set the ID of the classification, and then you can 
+modify the name and alias`,
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
 			if modifyCatId == 0 {
@@ -49,9 +52,14 @@ pages, and categories to the blog`,
 
 	modifyArtCmd = &cobra.Command{
 		Use:   "article",
-		Short: "sda",
-		Long:  `afas`,
-		Args:  cobra.ExactArgs(1),
+		Short: "modify articles",
+		Long: `According to the entered article ID, the article 
+will be downloaded to the local first, and then opened with the 
+set text editor. When the user exits the text editor after the 
+modification is completed, the program will automatically synchronize 
+the modified text content to the server, and you can also modify the 
+article title and category`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
 			id, err := strconv.Atoi(args[0])
@@ -67,14 +75,23 @@ pages, and categories to the blog`,
 			newContent, err := ioutil.ReadFile(curPath)
 			common.Assert(err)
 			cli.ArtModify(getWebsiteInfo().HOST, uint(id), modifyCatId, modifyTitle, string(newContent))
+			if modifyDelFile {
+				err = os.Remove(curPath)
+				common.Assert(err)
+			}
 		},
 	}
 
 	modifyPageCmd = &cobra.Command{
 		Use:   "page",
-		Short: "sda",
-		Long:  `afas`,
-		Args:  cobra.ExactArgs(1),
+		Short: "modify page",
+		Long: `According to the entered page ID, the page 
+will be downloaded to the local first, and then opened with the 
+set text editor. When the user exits the text editor after the 
+modification is completed, the program will automatically synchronize 
+the modified text content to the server, and you can also modify the 
+page title`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
 			id, err := strconv.Atoi(args[0])
@@ -90,6 +107,10 @@ pages, and categories to the blog`,
 			newContent, err := ioutil.ReadFile(curPath)
 			common.Assert(err)
 			cli.PageModify(getWebsiteInfo().HOST, uint(id), modifyTitle, string(newContent))
+			if modifyDelFile {
+				err = os.Remove(curPath)
+				common.Assert(err)
+			}
 		},
 	}
 )
@@ -101,8 +122,10 @@ func init() {
 
 	modifyArtCmd.PersistentFlags().UintVarP(&modifyCatId, "catid", "i", 0, "category ID of the article")
 	modifyArtCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the article")
+	modifyArtCmd.PersistentFlags().BoolVarP(&modifyDelFile, "del", "d", false, "Delete locally cached markdown files")
 
 	modifyPageCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the page")
+	modifyPageCmd.PersistentFlags().BoolVarP(&modifyDelFile, "del", "d", false, "Delete locally cached markdown files")
 
 	modifyCmd.AddCommand(modifyArtCmd)
 	modifyCmd.AddCommand(modifyCatCmd)

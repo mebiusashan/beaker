@@ -133,9 +133,11 @@ operation permissions`,
 
 	setEditorCmd = &cobra.Command{
 		Use:   "editor",
-		Short: "",
-		Long:  ``,
-		Args:  cobra.ExactArgs(1),
+		Short: "Set up a text editor",
+		Long: `When modifying an article, the content 
+of the article is downloaded to the local, and then 
+opened and edited with this editor`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			editor := args[0]
 			localConfig.Editor = editor
