@@ -2,9 +2,11 @@ package net
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/mebiusashan/beaker/common"
 )
@@ -18,7 +20,10 @@ func PostJson(url string, body io.Reader) common.SuccMsg {
 
 	var jsonData common.SuccMsg
 	err = json.Unmarshal(Body, &jsonData)
-	common.Assert(err)
+	if err != nil {
+		fmt.Println(string(Body))
+		os.Exit(0)
+	}
 
 	if jsonData.Code != common.SUCC {
 		common.Err(jsonData.Msg)
