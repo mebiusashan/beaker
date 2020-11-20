@@ -56,10 +56,27 @@ ID of the classification to which the chapter belongs`,
 
 	addPageCmd = &cobra.Command{
 		Use:   "page",
-		Short: "",
-		Long:  ``,
+		Short: "Add a page",
+		Long: `The path of the markdown file 
+needs to be set. If the - t parameter is set, 
+the parameter value is used as the article title. 
+If not set, the file name is used as the article 
+title. At the same time, it must be set to the 
+ID of the classification to which the chapter belongs`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
+
+			mdPath := args[0]
+			content, err := ioutil.ReadFile(mdPath)
+			common.Assert(err)
+			title := addArticleTitle
+			if title == "" {
+				filenameWithSuffix := path.Base(mdPath)
+				fileSuffix := path.Ext(filenameWithSuffix)
+				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
+			}
+			cli.PageAdd(getWebsiteInfo().HOST, string(content), title)
 		},
 	}
 

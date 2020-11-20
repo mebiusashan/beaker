@@ -94,3 +94,9 @@ type CatDB struct {
 	Cname string
 	Name  string
 }
+
+type PageDB struct {
+	gorm.Model
+	Title   string
+	Context string
+}

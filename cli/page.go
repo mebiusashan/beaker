@@ -37,5 +37,9 @@ func PageRm(host string, id uint) {
 }
 
 func PageAdd(host string, content string, title string) {
+	sendData := common.PageDB{Title: title, Context: content}
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
 
+	net.PostJson(host+net.CLI_PAGE_ADD, strings.NewReader(string(jsonByte)))
 }
