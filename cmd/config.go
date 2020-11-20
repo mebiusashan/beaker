@@ -130,6 +130,18 @@ operation permissions`,
 			login(info.HOST, addWebSiteUser, addWebSitePassword)
 		},
 	}
+
+	setEditorCmd = &cobra.Command{
+		Use:   "editor",
+		Short: "",
+		Long:  ``,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			editor := args[0]
+			localConfig.Editor = editor
+			writeConfig()
+		},
+	}
 )
 
 func init() {
@@ -144,6 +156,7 @@ func init() {
 	configCmd.AddCommand(addWebSiteCmd)
 	configCmd.AddCommand(rmWebsiteCmd)
 	configCmd.AddCommand(loginCmd)
+	configCmd.AddCommand(setEditorCmd)
 }
 
 func initConfig() {
