@@ -19,6 +19,7 @@ type websiteConfig struct {
 
 type config struct {
 	DefaultWebsite string
+	Editor         string
 	Websites       []websiteConfig
 }
 

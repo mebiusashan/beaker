@@ -20,4 +20,5 @@ const CLI_PAGE_ADD string = "/admin/pag/add"
 const CLI_TWEET_ADD string = "/admin/twe/add"
 const CLI_CAT_ADD string = "/admin/cat/add"
 
+const CLI_ART_DOWN string = "/admin/arc/down"
 const CLI_CAT_MODIFY string = "/admin/cat/change"

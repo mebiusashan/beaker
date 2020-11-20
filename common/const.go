@@ -100,3 +100,5 @@ type PageDB struct {
 	Title   string
 	Context string
 }
+
+const DefaultEditor string = "nano"

@@ -35,3 +35,18 @@ func ArtAdd(host string, content string, title string, cid uint) {
 
 	net.PostJson(host+net.CLI_ART_ADD, strings.NewReader(string(jsonByte)))
 }
+
+func ArtDownload(host string, id uint) (string, string) {
+	sendData := common.ArcDB{}
+	sendData.ID = id
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
+
+	jsonData := net.PostJson(host+net.CLI_ART_DOWN, strings.NewReader(string(jsonByte)))
+	data := jsonData.Data.(map[string]interface{})
+	return data["Title"].(string), data["Context"].(string)
+}
+
+func ArtModify(host string, id uint, catId uint, title string, content string) {
+
+}
