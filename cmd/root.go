@@ -10,8 +10,13 @@ var (
 	rootCmd = &cobra.Command{
 		Use:   "beaker",
 		Short: "Beaker is a simple blog system.",
-		Long: `Beaker is a CS architecture blog system, 
-you can manage your numerous beaker blogs through beaker.`,
+		Long: `Beaker is a very fast, simple and 
+smart blog system. It is very suitable for geeks. 
+At the same time, Beaker advocates using markdown 
+to edit articles and manage your blog through the 
+terminal. It is completely open source, you can 
+add and modify functions at will, and its source 
+code can be accessed at https://github.com/mebiusashan/beaker.`,
 	}
 )
 
