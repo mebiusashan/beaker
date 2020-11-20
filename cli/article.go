@@ -28,5 +28,10 @@ func ArtRm(host string, id uint) {
 }
 
 func ArtAdd(host string, content string, title string, cid uint) {
+	sendData := common.ArcDB{Title: title, Context: content}
+	sendData.Catid = cid
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
 
+	net.PostJson(host+net.CLI_ART_ADD, strings.NewReader(string(jsonByte)))
 }

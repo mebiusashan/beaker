@@ -14,3 +14,5 @@ const CLI_ART_RM string = "/admin/arc/del"
 const CLI_PAGE_RM string = "/admin/pag/del"
 const CLI_TWEET_RM string = "/admin/twe/del"
 const CLI_CAT_RM string = "/admin/cat/del"
+
+const CLI_ART_ADD string = "/admin/arc/add"
