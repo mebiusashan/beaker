@@ -48,3 +48,12 @@ func CatAdd(host string, name string, alias string) {
 
 	net.PostJson(host+net.CLI_CAT_ADD, strings.NewReader(string(jsonByte)))
 }
+
+func CatModify(host string, id uint, name string, alias string) {
+	sendData := common.CatDB{Cname: alias, Name: name}
+	sendData.ID = id
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
+
+	net.PostJson(host+net.CLI_CAT_MODIFY, strings.NewReader(string(jsonByte)))
+}
