@@ -42,5 +42,9 @@ func CatRm(host string, id uint, mid uint) {
 }
 
 func CatAdd(host string, name string, alias string) {
+	sendData := common.CatDB{Cname: alias, Name: name}
+	jsonByte, err := json.Marshal(sendData)
+	common.Assert(err)
 
+	net.PostJson(host+net.CLI_CAT_ADD, strings.NewReader(string(jsonByte)))
 }

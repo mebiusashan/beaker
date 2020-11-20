@@ -99,8 +99,14 @@ need to write the content to be sent in the message tag`,
 		Use:   "category",
 		Short: "",
 		Long:  ``,
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
+
+			if addCategoryAlias == "" {
+				common.Err("Alias cannot be empty")
+			}
+			cli.CatAdd(getWebsiteInfo().HOST, args[0], addCategoryAlias)
 		},
 	}
 )
