@@ -53,7 +53,7 @@ pages, and categories to the blog`,
 		Long:  `afas`,
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			// checkWebsite()
+			checkWebsite()
 			id, err := strconv.Atoi(args[0])
 			common.Assert(err)
 			curPath, err := os.Getwd()
@@ -76,7 +76,7 @@ pages, and categories to the blog`,
 		Long:  `afas`,
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			// checkWebsite()
+			checkWebsite()
 			id, err := strconv.Atoi(args[0])
 			common.Assert(err)
 			curPath, err := os.Getwd()
