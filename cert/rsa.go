@@ -37,15 +37,21 @@ func RSADecrypt(priKey []byte, ciphertext []byte) ([]byte, error) {
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
 }
 
-func CheckRSAKey(pub []byte, pri []byte) {
+func CheckRSAKey(pub []byte, pri []byte) bool {
 	testStr := "test"
 	rel, err := RSAEncryp(pub, []byte(testStr))
+	if err != nil {
+		return false
+	}
 	common.Assert(err)
 	rel, err = RSADecrypt(pri, rel)
-	common.Assert(err)
-	if string(rel) != testStr {
-		common.Err("Secret key verification failed")
+	if err != nil {
+		return false
 	}
+	if string(rel) != testStr {
+		return false
+	}
+	return true
 }
 
 func CreateRSAKeys() (pub []byte, pri []byte, err error) {

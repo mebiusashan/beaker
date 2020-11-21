@@ -86,7 +86,10 @@ func RunAdmin() {
 	pri, err := ioutil.ReadFile(config.AuthInfo.ServerKeyDir + SERVER_PRIVATE_KEY)
 	common.Assert(err)
 
-	cert.CheckRSAKey(pub, pri)
+	rel := cert.CheckRSAKey(pub, pri)
+	if !rel {
+		common.Err("Secret key verification failed")
+	}
 
 	router := gin.Default()
 
