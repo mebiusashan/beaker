@@ -6,7 +6,8 @@ type BaseRespMsg struct {
 }
 
 type BaseReqMsg struct {
-	refresh bool
+	Refresh bool
+	Data    interface{}
 }
 
 type SuccMsgResp struct {
