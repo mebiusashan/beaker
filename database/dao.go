@@ -2,18 +2,18 @@ package database
 
 import "github.com/jinzhu/gorm"
 
-type dao struct {
+type Dao struct {
 	mysql  *gorm.DB
 	server string
 }
 
-func (d *dao) newDao(url string, name string, password string, dbname string) error {
+func (d *Dao) NewDao(url string, name string, password string, dbname string) error {
 	d.server = name + ":" + password + "@tcp(" + url + ")/" + dbname +
 		"?charset=utf8mb4&parseTime=true&loc=Local"
-	return d.open()
+	return d.Open()
 }
 
-func (d *dao) open() error {
+func (d *Dao) Open() error {
 	var err error
 	d.mysql, err = gorm.Open("mysql", d.server)
 	if err != nil {

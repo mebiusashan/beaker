@@ -10,19 +10,19 @@ func (CategoryModelDB) TableName() string {
 	return "cats"
 }
 
-func (d *dao) CategoryFindAll() ([]CategoryModelDB, error) {
+func (d *Dao) CategoryFindAll() ([]CategoryModelDB, error) {
 	var cats []CategoryModelDB
 	err := d.mysql.Order("id desc").Find(&cats).Error
 	return cats, err
 }
 
-func (d *dao) CategoryFindByAlias(alias string) (*CategoryModelDB, error) {
+func (d *Dao) CategoryFindByAlias(alias string) (*CategoryModelDB, error) {
 	cat := new(CategoryModelDB)
 	err := d.mysql.Order("id desc").Where("alias = ?", alias).First(cat).Error
 	return cat, err
 }
 
-func (d *dao) CategoryAdd(name string, alias string) error {
+func (d *Dao) CategoryAdd(name string, alias string) error {
 	cat := CategoryModelDB{}
 	cat.Name = name
 	cat.Alias = alias
@@ -30,14 +30,14 @@ func (d *dao) CategoryAdd(name string, alias string) error {
 	return err
 }
 
-func (d *dao) CategoryDel(id uint) error {
+func (d *Dao) CategoryDel(id uint) error {
 	cat := CategoryModelDB{}
 	cat.ID = id
 	err := d.mysql.Delete(cat).Error
 	return err
 }
 
-func (d *dao) CategoryUpdate(id uint, name string, alias string) error {
+func (d *Dao) CategoryUpdate(id uint, name string, alias string) error {
 	data := make(map[string]interface{})
 	if name != "" {
 		data["name"] = name
