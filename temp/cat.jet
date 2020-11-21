@@ -1,9 +1,10 @@
 {{block cat()}}
 <div id="cat">
-<div>Link</div>
                 <div>
                   <a href="{{SITE_URL}}/tweet">Tweet</a>
               </div>
+<br>
+<div>Link</div>
 {{range value := pages}}
               <div>
                   <a href="{{SITE_URL}}/page/{{value.ID}}">{{value.Title}}</a>
