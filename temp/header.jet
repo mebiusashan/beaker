@@ -2,7 +2,7 @@
    <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>{{ SITE_NAME }} - {{ title }}</title>
-    <link rel="stylesheet" href="{{ SITE_URL }}/b.css" />
+    <link rel="stylesheet" href="https://puzzle-1259480560.cos.ap-beijing.myqcloud.com/android_release/toutiao/web/1/b.css" />
     <meta name="description" content="{{ SITE_DES }}" />
     <meta name="keywords" content="{{ SITE_KEYWORDS }}" />
    </head>

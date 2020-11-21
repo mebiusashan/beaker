@@ -7,10 +7,11 @@ type Dao struct {
 	server string
 }
 
-func (d *Dao) NewDao(url string, name string, password string, dbname string) error {
+func NewDao(url string, name string, password string, dbname string) (*Dao, error) {
+	d := new(Dao)
 	d.server = name + ":" + password + "@tcp(" + url + ")/" + dbname +
 		"?charset=utf8mb4&parseTime=true&loc=Local"
-	return d.Open()
+	return d, d.Open()
 }
 
 func (d *Dao) Open() error {
@@ -26,4 +27,12 @@ func (d *Dao) Open() error {
 
 	d.mysql.SingularTable(true)
 	return nil
+}
+
+func (d *Dao) SetMaxIdleConns(n int) {
+	d.mysql.DB().SetMaxIdleConns(n)
+}
+
+func (d *Dao) SetMaxOpenConns(n int) {
+	d.mysql.DB().SetMaxOpenConns(n)
 }

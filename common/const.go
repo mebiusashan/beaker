@@ -38,3 +38,6 @@ const DefaultEditor string = "nano"
 
 const SERVER_ENV_KEY string = "BEAKERPATH"
 const ADMIN_ENV_KEY string = "BEAKERADMINPATH"
+
+const SERVER_PUBLIC_KEY = "pub.pem"
+const SERVER_PRIVATE_KEY = "pri.pem"

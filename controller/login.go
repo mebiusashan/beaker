@@ -15,13 +15,10 @@ type LoginController struct {
 	BaseController
 }
 
-const SERVER_PUBLIC_KEY = "pub.pem"
-const SERVER_PRIVATE_KEY = "pri.pem"
-
 var loginKey string = ""
 
 func (ct *LoginController) Ping(c *gin.Context) {
-	pubKey, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + SERVER_PUBLIC_KEY)
+	pubKey, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
 	if err != nil {
 		writeFail(c, err.Error())
 		return
@@ -30,7 +27,7 @@ func (ct *LoginController) Ping(c *gin.Context) {
 }
 
 func (ct *LoginController) Login(c *gin.Context) {
-	pri, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + SERVER_PRIVATE_KEY)
+	pri, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PRIVATE_KEY)
 	if err != nil {
 		writeFail(c, err.Error())
 		return
