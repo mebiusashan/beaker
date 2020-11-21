@@ -6,6 +6,8 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+
+	"github.com/mebiusashan/beaker/common"
 )
 
 const def_RSA_LEN int = 2048
@@ -35,20 +37,15 @@ func RSADecrypt(priKey []byte, ciphertext []byte) ([]byte, error) {
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
 }
 
-func CheckRSAKey(pub []byte, pri []byte) bool {
+func CheckRSAKey(pub []byte, pri []byte) {
 	testStr := "test"
 	rel, err := RSAEncryp(pub, []byte(testStr))
-	if err != nil {
-		return false
-	}
+	common.Assert(err)
 	rel, err = RSADecrypt(pri, rel)
-	if err != nil {
-		return false
-	}
+	common.Assert(err)
 	if string(rel) != testStr {
-		return false
+		common.Err("Secret key verification failed")
 	}
-	return true
 }
 
 func CreateRSAKeys() (pub []byte, pri []byte, err error) {
