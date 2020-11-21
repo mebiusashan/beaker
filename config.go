@@ -3,7 +3,6 @@ package beaker
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/BurntSushi/toml"
 )
@@ -187,7 +186,6 @@ func NewWithPath(path string, check byte) (*ConfigData, error) {
 		}
 	}
 	if checkAuthInfo&check == checkAuthInfo {
-		fmt.Println("checkAuthInfo")
 		if err = checkWithDefConfig(&config.AuthInfo); err != nil {
 			return nil, err
 		}
