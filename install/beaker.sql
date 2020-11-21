@@ -5,17 +5,17 @@
 -- --------------------------------------------------------
 
 --
--- 表的结构 `arcs`
+-- 表的结构 `arts`
 --
 
-CREATE TABLE IF NOT EXISTS `arcs` (
+CREATE TABLE IF NOT EXISTS `arts` (
   `id` int(11) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `catid` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `context` text NOT NULL
+  `content` text NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=973 DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `cats` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `cname` varchar(255) NOT NULL,
+  `alias` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4;
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `title` varchar(255) NOT NULL,
-  `context` text NOT NULL
+  `content` text NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=962 DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `tweets` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `context` text NOT NULL
+  `content` text NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4;
 
 --
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS `tweets` (
 --
 
 --
--- Indexes for table `arcs`
+-- Indexes for table `arts`
 --
-ALTER TABLE `arcs`
+ALTER TABLE `arts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `catid` (`catid`),
   ADD KEY `idx_arcs_deleted_at` (`deleted_at`);
@@ -100,9 +100,9 @@ ALTER TABLE `tweets`
 --
 
 --
--- AUTO_INCREMENT for table `arcs`
+-- AUTO_INCREMENT for table `arts`
 --
-ALTER TABLE `arcs`
+ALTER TABLE `arts`
   MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=973;
 --
 -- AUTO_INCREMENT for table `cats`
