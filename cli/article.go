@@ -19,7 +19,7 @@ func ArtAll(host string) {
 }
 
 func ArtRm(host string, id uint) {
-	sendData := common.ArcDB{}
+	sendData := common.ArticleModel{}
 	sendData.ID = id
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
@@ -28,7 +28,7 @@ func ArtRm(host string, id uint) {
 }
 
 func ArtAdd(host string, content string, title string, cid uint) {
-	sendData := common.ArcDB{Title: title, Context: content}
+	sendData := common.ArticleModel{Title: title, Content: content}
 	sendData.Catid = cid
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
@@ -37,14 +37,14 @@ func ArtAdd(host string, content string, title string, cid uint) {
 }
 
 func ArtDownload(host string, id uint) (string, string) {
-	sendData := common.ArcDB{}
+	sendData := common.ArticleModel{}
 	sendData.ID = id
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
 
 	jsonData := net.PostJson(host+net.CLI_ART_DOWN, strings.NewReader(string(jsonByte)))
 	data := jsonData.Data.(map[string]interface{})
-	return data["Title"].(string), data["Context"].(string)
+	return data["Title"].(string), data["Content"].(string)
 }
 
 func ArtModify(host string, id uint, catId uint, title string, content string) {

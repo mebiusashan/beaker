@@ -11,7 +11,7 @@ import (
 )
 
 func TweetAll(host string, curPage uint) {
-	postData := common.TweList{CurPage: curPage}
+	postData := common.TweetListReq{CurPage: curPage}
 	jsonByte, err := json.Marshal(postData)
 	common.Assert(err)
 
@@ -28,14 +28,14 @@ func TweetAll(host string, curPage uint) {
 	}
 	for _, va := range dd["List"].([]interface{}) {
 		v := va.(map[string]interface{})
-		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %s\n", uint(v["ID"].(float64)), v["Context"])
+		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %s\n", uint(v["ID"].(float64)), v["Content"])
 	}
 	fmt.Println("---------------------------------------")
 	fmt.Println(dd["TotlePage"], "pages,", dd["TweNum"], "tweets, current", dd["CurPage"], "page")
 }
 
 func TweetRm(host string, id uint) {
-	sendData := common.ArcDB{}
+	sendData := common.ArticleModel{}
 	sendData.ID = id
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
@@ -44,7 +44,7 @@ func TweetRm(host string, id uint) {
 }
 
 func TweetAdd(host string, message string) {
-	sendData := common.TweetDB{Context: message}
+	sendData := common.TweetModel{Content: message}
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
 

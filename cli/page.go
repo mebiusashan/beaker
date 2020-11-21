@@ -28,7 +28,7 @@ func PageAll(host string) {
 }
 
 func PageRm(host string, id uint) {
-	sendData := common.ArcDB{}
+	sendData := common.ArticleModel{}
 	sendData.ID = id
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
@@ -37,7 +37,7 @@ func PageRm(host string, id uint) {
 }
 
 func PageAdd(host string, content string, title string) {
-	sendData := common.PageDB{Title: title, Context: content}
+	sendData := common.PageModel{Title: title, Content: content}
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
 
@@ -45,14 +45,14 @@ func PageAdd(host string, content string, title string) {
 }
 
 func PageDownload(host string, id uint) (string, string) {
-	sendData := common.ArcDB{}
+	sendData := common.ArticleModel{}
 	sendData.ID = id
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
 
 	jsonData := net.PostJson(host+net.CLI_PAGE_DOWN, strings.NewReader(string(jsonByte)))
 	data := jsonData.Data.(map[string]interface{})
-	return data["Title"].(string), data["Context"].(string)
+	return data["Title"].(string), data["Content"].(string)
 }
 
 func PageModify(host string, id uint, title string, content string) {

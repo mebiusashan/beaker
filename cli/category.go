@@ -21,18 +21,18 @@ func CatAll(host string) {
 		if maxid < l {
 			maxid = l
 		}
-		if maxcname < len(v["Cname"].(string)) {
-			maxcname = len(v["Cname"].(string))
+		if maxcname < len(v["Alias"].(string)) {
+			maxcname = len(v["Alias"].(string))
 		}
 	}
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
-		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %-"+strconv.Itoa(maxcname)+"s %s\n", uint(v["ID"].(float64)), v["Cname"], v["Name"])
+		fmt.Printf("%-"+strconv.Itoa(maxid)+"d %-"+strconv.Itoa(maxcname)+"s %s\n", uint(v["ID"].(float64)), v["Alias"], v["Name"])
 	}
 }
 
 func CatRm(host string, id uint, mid uint) {
-	sendData := common.CatDBDel{}
+	sendData := common.CatRmReq{}
 	sendData.ID = id
 	sendData.MvID = mid
 	jsonByte, err := json.Marshal(sendData)
@@ -42,7 +42,7 @@ func CatRm(host string, id uint, mid uint) {
 }
 
 func CatAdd(host string, name string, alias string) {
-	sendData := common.CatDB{Cname: alias, Name: name}
+	sendData := common.CatModel{Alias: alias, Name: name}
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)
 
@@ -50,7 +50,7 @@ func CatAdd(host string, name string, alias string) {
 }
 
 func CatModify(host string, id uint, name string, alias string) {
-	sendData := common.CatDB{Cname: alias, Name: name}
+	sendData := common.CatModel{Alias: alias, Name: name}
 	sendData.ID = id
 	jsonByte, err := json.Marshal(sendData)
 	common.Assert(err)

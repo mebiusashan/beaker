@@ -11,14 +11,14 @@ import (
 	"github.com/mebiusashan/beaker/common"
 )
 
-func PostJson(url string, body io.Reader) common.SuccMsg {
+func PostJson(url string, body io.Reader) common.SuccMsgResp {
 	resp, err := http.Post(url, "", body)
 	common.Assert(err)
 
 	Body, err := ioutil.ReadAll(resp.Body)
 	common.Assert(err)
 
-	var jsonData common.SuccMsg
+	var jsonData common.SuccMsgResp
 	err = json.Unmarshal(Body, &jsonData)
 	if err != nil {
 		fmt.Println(string(Body))
