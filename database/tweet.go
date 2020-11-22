@@ -12,6 +12,11 @@ func (TweetModelDB) TableName() string {
 
 func (d *Dao) TweetFindByNum(page uint, num uint) ([]TweetModelDB, error) {
 	var tw []TweetModelDB
+	count := 0
+	d.mysql.Model(&TweetModelDB{}).Count(&count)
+	if count == 0 {
+		return tw, nil
+	}
 	err := d.mysql.Order("id desc").Offset((page - 1) * num).Limit(num).Find(&tw).Error
 	return tw, err
 }
