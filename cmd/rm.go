@@ -20,6 +20,10 @@ var (
 		Long:  `You can delete articles, single pages, Tweets and categories in the blog`,
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
+			if !articlerm && !pagerm && !tweetrm && !categoryrm {
+				cmd.Help()
+				return
+			}
 			if articlerm {
 				if len(args) == 0 {
 					common.Err("Missing ID parameter")
