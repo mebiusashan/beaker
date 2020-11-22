@@ -6,6 +6,8 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+var AuthEXPIRE_TIME int64 = 0
+
 func NewWithPath(path string, check byte) (*ConfigData, error) {
 	var config ConfigData
 	_, err := toml.DecodeFile(path, &config)

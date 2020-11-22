@@ -157,5 +157,7 @@ func (t *Auth) check() error {
 	if t.EXPIRE_TIME <= 0 {
 		return errors.New("Auth's EXPIRE_TIME is error.")
 	}
+
+	AuthEXPIRE_TIME = t.EXPIRE_TIME
 	return nil
 }
