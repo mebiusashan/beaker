@@ -13,7 +13,6 @@ URL = "localhost"
 REDIS_IP = "127.0.0.1"
 REDIS_PORT = "6379"
 REDIS_PREFIX = "beaker_"
-#设置7天的记录生命
 EXPIRE_TIME = 25200
 
 [database]
