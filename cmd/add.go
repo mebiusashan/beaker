@@ -97,9 +97,12 @@ need to write the content to be sent in the message tag`,
 
 	addCategoryCmd = &cobra.Command{
 		Use:   "category",
-		Short: "",
-		Long:  ``,
-		Args:  cobra.ExactArgs(1),
+		Short: "Add a category",
+		Long: `To add a category, you need to specify the 
+name of the category, and you also need to create 
+an alias. The alias will be used as the path of the category. 
+It is recommended to use English words with corresponding meanings`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
 
