@@ -57,7 +57,6 @@ type Auth struct {
 	Name         string
 	Password     string
 	ServerKeyDir string
-	ClientKeyDir string
 	ConfigPath   string
 }
 
@@ -150,9 +149,6 @@ func (t *Auth) check() error {
 	}
 	if t.ServerKeyDir == "" {
 		return errors.New("Auth's ServerKeyDir is empty.")
-	}
-	if t.ClientKeyDir == "" {
-		return errors.New("Auth's ClientKeyDir is empty.")
 	}
 	if t.ConfigPath == "" {
 		return errors.New("Auth's ConfigPath is empty.")

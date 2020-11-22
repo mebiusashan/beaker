@@ -3,7 +3,6 @@ Name="-Name"
 Password="-Password"
 ConfigPath="-ConfigPath/config.toml"
 ServerKeyDir="-ServerKey/keys/"
-ClientKeyDir="-ServerKey/keys/"
 
 [server]
 PORT = ":-PORT"
