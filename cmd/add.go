@@ -114,9 +114,12 @@ need to write the content to be sent in the message tag`,
 func init() {
 	addArticleCmd.PersistentFlags().UintVarP(&addArticleCatId, "catid", "i", 0, "category ID of the article")
 	addArticleCmd.PersistentFlags().StringVarP(&addArticleTitle, "title", "t", "", "title of the article")
+	addArticleCmd.MarkFlagRequired("catid")
 	addPageCmd.PersistentFlags().StringVarP(&addArticleTitle, "title", "t", "", "title of the page")
 	addTweetCmd.PersistentFlags().StringVarP(&addTweetMsg, "message", "m", "", "message of the tweet")
+	addTweetCmd.MarkFlagRequired("message")
 	addCategoryCmd.PersistentFlags().StringVarP(&addCategoryAlias, "alias", "a", "", "alias of the category")
+	addCategoryCmd.MarkFlagRequired("alias")
 
 	addCmd.AddCommand(addArticleCmd)
 	addCmd.AddCommand(addPageCmd)

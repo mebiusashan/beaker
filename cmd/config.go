@@ -155,9 +155,14 @@ func init() {
 	addWebSiteCmd.PersistentFlags().StringVarP(&addWebSiteUser, "user", "u", "", "blog administrator account name")
 	addWebSiteCmd.PersistentFlags().StringVarP(&addWebSitePassword, "password", "p", "", "blog administrator account password")
 	addWebSiteCmd.PersistentFlags().BoolVarP(&addWebSiteIsDefault, "defalut", "d", false, "set as default blog")
+	addWebSiteCmd.MarkFlagRequired("alias")
+	addWebSiteCmd.MarkFlagRequired("user")
+	addWebSiteCmd.MarkFlagRequired("password")
 
 	loginCmd.PersistentFlags().StringVarP(&addWebSiteUser, "user", "u", "", "blog administrator account name")
 	loginCmd.PersistentFlags().StringVarP(&addWebSitePassword, "password", "p", "", "blog administrator account password")
+	loginCmd.MarkFlagRequired("user")
+	loginCmd.MarkFlagRequired("password")
 
 	configCmd.AddCommand(addWebSiteCmd)
 	configCmd.AddCommand(rmWebsiteCmd)

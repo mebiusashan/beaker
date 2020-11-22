@@ -119,6 +119,7 @@ func init() {
 
 	modifyCatCmd.PersistentFlags().UintVarP(&modifyCatId, "catid", "i", 0, "category ID of the category")
 	modifyCatCmd.PersistentFlags().StringVarP(&modifyCatAlias, "alias", "a", "", "alias of the category")
+	modifyCatCmd.MarkFlagRequired("catid")
 
 	modifyArtCmd.PersistentFlags().UintVarP(&modifyCatId, "catid", "i", 0, "category ID of the article")
 	modifyArtCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the article")
