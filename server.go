@@ -33,7 +33,7 @@ func RunServer() {
 	context := controller.NewContext()
 	context.Cache = cac
 	context.Config = config
-	context.Model = context.Model
+	context.Model = model
 	context.View = vr
 
 	router := gin.Default()
@@ -68,7 +68,7 @@ func RunAdmin() {
 	context := controller.NewContext()
 	context.Cache = cac
 	context.Config = config
-	context.Model = context.Model
+	context.Model = model
 
 	pubHas, err := controller.PathExists(config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
 	common.Assert(err)
