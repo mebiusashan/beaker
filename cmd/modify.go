@@ -23,7 +23,7 @@ var (
 		Long: `You can modify articles, single 
 pages, and categories to the blog`,
 		Run: func(cmd *cobra.Command, args []string) {
-			checkWebsite()
+			cmd.Help()
 		},
 	}
 
