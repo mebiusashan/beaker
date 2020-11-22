@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mebiusashan/beaker/cache"
 	"github.com/mebiusashan/beaker/common"
 )
 
@@ -39,6 +40,14 @@ func writeFail(c *gin.Context, msg string) {
 	c.JSON(200, data)
 }
 
+func hasErrorWriteFail(c *gin.Context, err error) bool {
+	if err != nil {
+		writeFail(c, err.Error())
+		return true
+	}
+	return false
+}
+
 func writeStrSucc(c *gin.Context, msg string, d interface{}) {
 	data := new(common.SuccMsgResp)
 	data.Code = common.SUCC
@@ -54,4 +63,28 @@ func writeStrFail(c *gin.Context, msg string) {
 	data.Msg = msg
 	str, _ := json.Marshal(data)
 	c.String(200, string((str)))
+}
+
+func hasCacheWriteBody(c *gin.Context, cache *cache.Cache, tag string, key string) bool {
+	bodyStr, err := cache.GET(tag, key)
+	if err == nil && bodyStr != "" {
+		write200(c, bodyStr)
+		return true
+	}
+	return false
+}
+func hasErrDo404(c *gin.Context, ct *ErrerController, err error) bool {
+	if err != nil {
+		ct.Do404(c)
+		return true
+	}
+	return false
+}
+
+func hasErrDo500(c *gin.Context, ct *ErrerController, err error) bool {
+	if err != nil {
+		ct.Do500(c)
+		return true
+	}
+	return false
 }
