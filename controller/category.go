@@ -30,7 +30,15 @@ func (ct *CategoryController) Del(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.CatRmReq{}
 	json.Unmarshal(value.([]byte), &data)
-	err := ct.Context.Model.ArticleUpdateCat(data.ID, data.MvID)
+	mcat, err := ct.Context.Model.CategoryFindByID(data.MvID)
+	if hasErrorWriteFail(c, err) {
+		return
+	}
+	if mcat.ID != data.MvID {
+		writeFail(c, "Target category ID does not exist")
+		return
+	}
+	err = ct.Context.Model.ArticleUpdateCat(data.ID, data.MvID)
 	if hasErrorWriteFail(c, err) {
 		return
 	}
