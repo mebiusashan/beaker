@@ -41,5 +41,13 @@ func NewContext() *Context {
 	c.Ctrl.IndC = new(IndexController)
 	c.Ctrl.OptC = new(OptionController)
 	c.Ctrl.LoginC = new(LoginController)
+	c.Ctrl.ArtC.Context = c
+	c.Ctrl.CatC.Context = c
+	c.Ctrl.PagC.Context = c
+	c.Ctrl.TweC.Context = c
+	c.Ctrl.ErrC.Context = c
+	c.Ctrl.IndC.Context = c
+	c.Ctrl.OptC.Context = c
+	c.Ctrl.LoginC.Context = c
 	return c
 }
