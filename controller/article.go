@@ -15,7 +15,15 @@ func (ct *ArticleController) Add(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.ArticleModel{}
 	json.Unmarshal(value.([]byte), &data)
-	err := ct.Context.Model.ArticleAdd(data.Catid, data.Title, data.Content)
+	cat, err := ct.Context.Model.CategoryFindByID(data.Catid)
+	if hasErrorWriteFail(c, err) {
+		return
+	}
+	if cat.ID != data.Catid {
+		writeFail(c, "category's id not found")
+		return
+	}
+	err = ct.Context.Model.ArticleAdd(data.Catid, data.Title, data.Content)
 	if hasErrorWriteFail(c, err) {
 		return
 	}

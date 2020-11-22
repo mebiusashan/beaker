@@ -22,6 +22,12 @@ func (d *Dao) CategoryFindByAlias(alias string) (*CategoryModelDB, error) {
 	return cat, err
 }
 
+func (d *Dao) CategoryFindByID(id uint) (*CategoryModelDB, error) {
+	cat := new(CategoryModelDB)
+	err := d.mysql.Order("id desc").Where("id = ?", id).First(cat).Error
+	return cat, err
+}
+
 func (d *Dao) CategoryAdd(name string, alias string) error {
 	cat := CategoryModelDB{}
 	cat.Name = name
