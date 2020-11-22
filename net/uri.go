@@ -7,10 +7,10 @@ const CLI_LOGIN string = "/user/login"
 const CLI_PING string = "/user/ping"
 
 //article
-const CLI_ART_LIST string = "/admin/arc/list"
-const CLI_ART_ADD string = "/admin/arc/add"
-const CLI_ART_RM string = "/admin/arc/del"
-const CLI_ART_DOWN string = "/admin/arc/down"
+const CLI_ART_LIST string = "/admin/art/list"
+const CLI_ART_ADD string = "/admin/art/add"
+const CLI_ART_RM string = "/admin/art/del"
+const CLI_ART_DOWN string = "/admin/art/down"
 const CLI_ART_MODIFY string = "/admin/art/modify"
 
 //page
@@ -46,10 +46,10 @@ const ADMIN_CHECK string = "check"
 const ADMIN_GROUP_ADMIN string = "admin"
 
 //article
-const ADMIN_ART_ADD string = "arc/add"
-const ADMIN_ART_RM string = "arc/del"
-const ADMIN_ART_LIST string = "arc/list"
-const ADMIN_ART_DOWNLOAD string = "arc/down"
+const ADMIN_ART_ADD string = "art/add"
+const ADMIN_ART_RM string = "art/del"
+const ADMIN_ART_LIST string = "art/list"
+const ADMIN_ART_DOWNLOAD string = "art/down"
 const ADMIN_ART_MODIFY string = "art/modify"
 
 //page
