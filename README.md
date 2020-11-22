@@ -2,11 +2,14 @@
 
 Beaker is a simple blog system.
 
+## Version
+
+0.0.1
+
 ## Platforms
 
 - Linux
 - MacOS
-- Windows(only cli)
 
 ## Install
 
@@ -71,7 +74,7 @@ Now you install beaker is success, you can see `config.toml` file in `/www/blog/
 `config.toml` like this:
 
 ```
-#配置文件
+#config file
 
 [website]
 SITE_NAME = "Beaker"
@@ -80,7 +83,6 @@ SITE_DES = "a simple blog system"
 SITE_FOOTER = "Beaker is a simple blog system. [github.com/mebiusashan/beaker]"
 SITE_KEYWORDS = "beaker, golang, blog"
 
-#首页记录数量
 INDEX_LIST_NUM = 30
 TWEET_NUM_ONE_PAGE = 10
 TEMP_FOLDER = "/www/blog/temp"
@@ -94,7 +96,6 @@ URL = "localhost"
 REDIS_IP = "127.0.0.1"
 REDIS_PORT = "6379"
 REDIS_PREFIX = "beaker_"
-#设置7天的记录生命
 EXPIRE_TIME = 25200
 
 [database]
@@ -124,7 +125,6 @@ URL = "localhost"
 REDIS_IP = "127.0.0.1"
 REDIS_PORT = "6379"
 REDIS_PREFIX = "beaker_"
-#设置7天的记录生命
 EXPIRE_TIME = 25200
 
 [database]
@@ -190,13 +190,11 @@ mv beaker_mac beaker
 ./beaker
 ```
 
-When you first run it , you need set you blog admin url, like `xxx.com:9092`.
+You need set your website info, list this:
 
->Note:the port in admin.toml file. See [server]->PORT.
-
-Now you need input user's name and password.
-
->Note:user's name and password in admin.toml file.
+```
+./beaker config addw http://xxx.com:8888 -uroot -proot -ablog -d
+```
 
 ## Contributing
 
