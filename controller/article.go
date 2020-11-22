@@ -59,3 +59,14 @@ func (ct *ArticleController) Down(c *gin.Context) {
 	}
 	writeSucc(c, "Article", art)
 }
+
+func (ct *ArticleController) Modify(c *gin.Context) {
+	value, _ := c.Get("data")
+	data := common.ArticleModel{}
+	json.Unmarshal(value.([]byte), &data)
+	err := ct.Context.Model.ArticleUpdate(data.ID, &data)
+	if hasErrorWriteFail(c, err) {
+		return
+	}
+	writeSucc(c, "Article modify successfully", "")
+}

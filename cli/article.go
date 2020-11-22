@@ -37,5 +37,10 @@ func ArtDownload(host string, refresh bool, key []byte, id uint) (string, string
 }
 
 func ArtModify(host string, refresh bool, key []byte, id uint, catId uint, title string, content string) {
-
+	sendData := common.ArticleModel{}
+	sendData.ID = id
+	sendData.Catid = catId
+	sendData.Title = title
+	sendData.Content = content
+	net.PostJsonWithEncrypt(host+net.CLI_ART_MODIFY, refresh, key, sendData)
 }

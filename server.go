@@ -120,6 +120,7 @@ func RunAdmin(isRelease bool) {
 	adminr.POST(net.ADMIN_ART_RM, context.Ctrl.ArtC.Del)
 	adminr.POST(net.ADMIN_ART_LIST, context.Ctrl.ArtC.All)
 	adminr.POST(net.ADMIN_ART_DOWNLOAD, context.Ctrl.ArtC.Down)
+	adminr.POST(net.ADMIN_ART_MODIFY, context.Ctrl.ArtC.Modify)
 
 	adminr.POST(net.ADMIN_PAGE_ADD, context.Ctrl.PagC.Add)
 	adminr.POST(net.ADMIN_PAGE_RM, context.Ctrl.PagC.Del)

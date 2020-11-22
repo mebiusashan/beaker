@@ -46,12 +46,27 @@ func (d *Dao) ArticleAdd(catid uint, title string, content string) error {
 func (d *Dao) ArticleDel(id uint) error {
 	art := new(ArticleModelDB)
 	art.ID = id
-	err := d.mysql.Delete(&art).Error
-	return err
+	return d.mysql.Delete(&art).Error
 }
 
 func (d *Dao) ArticleUpdateCat(catID uint, mvCatId uint) error {
 	art := new(ArticleModelDB)
-	err := d.mysql.Model(&art).Where("catid = ?", catID).Update("catid", mvCatId).Error
-	return err
+	return d.mysql.Model(&art).Where("catid = ?", catID).Update("catid", mvCatId).Error
+}
+
+func (d *Dao) ArticleUpdate(id uint, m *common.ArticleModel) error {
+	art, err := d.ArticleFindByID(id)
+	if err != nil {
+		return err
+	}
+	if m.Catid != 0 {
+		art.Catid = m.Catid
+	}
+	if m.Content != "" {
+		art.Content = m.Content
+	}
+	if m.Title != "" {
+		art.Title = m.Title
+	}
+	return d.mysql.Model(art).Updates(art).Error
 }

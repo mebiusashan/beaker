@@ -11,6 +11,7 @@ const CLI_ART_LIST string = "/admin/arc/list"
 const CLI_ART_ADD string = "/admin/arc/add"
 const CLI_ART_RM string = "/admin/arc/del"
 const CLI_ART_DOWN string = "/admin/arc/down"
+const CLI_ART_MODIFY string = "/admin/art/modify"
 
 //page
 const CLI_PAGE_LIST string = "/admin/pag/list"
@@ -48,6 +49,7 @@ const ADMIN_ART_ADD string = "arc/add"
 const ADMIN_ART_RM string = "arc/del"
 const ADMIN_ART_LIST string = "arc/list"
 const ADMIN_ART_DOWNLOAD string = "arc/down"
+const ADMIN_ART_MODIFY string = "art/modify"
 
 //page
 const ADMIN_PAGE_ADD string = "pag/add"
