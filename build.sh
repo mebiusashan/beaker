@@ -28,7 +28,7 @@ touch main.go
 echo "package main
 import \"github.com/mebiusashan/beaker\"
 func main(){
-    beaker.RunServer()
+    beaker.RunServer(true)
 }" > main.go
 
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o beaker_server main.go
@@ -36,7 +36,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o beaker_server main.go
 echo "package main
 import \"github.com/mebiusashan/beaker\"
 func main(){
-    beaker.RunAdmin()
+    beaker.RunAdmin(true)
 }" > main.go
 
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o beaker_admin main.go

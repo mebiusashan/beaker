@@ -15,7 +15,7 @@ import (
 	"github.com/mebiusashan/beaker/view"
 )
 
-func RunServer() {
+func RunServer(isRelease bool) {
 	path := os.Getenv(common.SERVER_ENV_KEY)
 	config, err := config.NewWithPath(path, 0x1B)
 	common.Assert(err)
@@ -36,8 +36,11 @@ func RunServer() {
 	context.Model = model
 	context.View = vr
 
-	router := gin.Default()
+	if isRelease {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
+	router := gin.Default()
 	//router.StaticFS("/static", http.Dir(config.Website.STATIC_FILE_FOLDER))
 	router.StaticFile("/b.css", config.Website.STATIC_FILE_FOLDER+"/b.css")
 	router.StaticFile("/favicon.ico", config.Website.STATIC_FILE_FOLDER+"/favicon.ico")
@@ -54,7 +57,7 @@ func RunServer() {
 	router.Run(config.Server.URL + config.Server.PORT)
 }
 
-func RunAdmin() {
+func RunAdmin(isRelease bool) {
 	path := os.Getenv(common.ADMIN_ENV_KEY)
 	config, err := config.NewWithPath(path, 0x1D)
 	common.Assert(err)
@@ -94,6 +97,10 @@ func RunAdmin() {
 	rel := cert.CheckRSAKey(pub, pri)
 	if !rel {
 		common.Err("Secret key verification failed")
+	}
+
+	if isRelease {
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	router := gin.Default()
