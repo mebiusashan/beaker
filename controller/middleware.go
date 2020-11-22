@@ -57,17 +57,16 @@ func DecodeForAdmin() gin.HandlerFunc {
 
 		c.Set("data", postData.Data)
 		c.Set("refresh", postData.Refresh)
-
 		c.Next()
 	}
 }
 
 func RefreshCache() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Next()
 		value, has := c.Get("refresh")
 		if has && value.(bool) {
 			controllerContext.Cache.ClearAll()
 		}
+		c.Next()
 	}
 }
