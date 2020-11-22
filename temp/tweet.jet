@@ -9,7 +9,7 @@
     <div>
         {{range value := tws}}
                   <div id="twblock">
-                      <div>{{value.Context}}</div>
+                      <div>{{value.Content}}</div>
                       <div id="twtime">{{ttimep(value.CreatedAt)}}</div>
                   </div>
         {{end}}
