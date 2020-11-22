@@ -3,6 +3,7 @@ Name="-Name"
 Password="-Password"
 ConfigPath="-ConfigPath/config.toml"
 ServerKeyDir="-ServerKey/keys/"
+EXPIRE_TIME=25200
 
 [server]
 PORT = ":-PORT"

@@ -58,6 +58,7 @@ type Auth struct {
 	Password     string
 	ServerKeyDir string
 	ConfigPath   string
+	EXPIRE_TIME  int64
 }
 
 type BaseConfig interface {
@@ -152,6 +153,9 @@ func (t *Auth) check() error {
 	}
 	if t.ConfigPath == "" {
 		return errors.New("Auth's ConfigPath is empty.")
+	}
+	if t.EXPIRE_TIME <= 0 {
+		return errors.New("Auth's EXPIRE_TIME is error.")
 	}
 	return nil
 }

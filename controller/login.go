@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/cert"
@@ -15,7 +16,32 @@ type LoginController struct {
 	BaseController
 }
 
-var loginKey string = ""
+type LoginInfo struct {
+	loginKey   string
+	createTime int64
+}
+
+var loginInfo *LoginInfo
+
+func GetLoginInfo() *LoginInfo {
+	if loginInfo == nil {
+		loginInfo = new(LoginInfo)
+	}
+	return loginInfo
+}
+
+func (l *LoginInfo) setKey(key string) {
+	l.loginKey = key
+	l.createTime = time.Now().Unix()
+}
+
+func (l *LoginInfo) CheckExpired(exTime int64) bool {
+	if time.Now().Unix()-l.createTime >= exTime {
+		l.loginKey = ""
+		return true
+	}
+	return false
+}
 
 func (ct *LoginController) Ping(c *gin.Context) {
 	pubKey, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
@@ -58,11 +84,11 @@ func (ct *LoginController) Login(c *gin.Context) {
 			//账号正确
 			//从redis里度des key，没有就创建
 			//用dk，加密 des key，发回去
-			desKey := loginKey
+			desKey := GetLoginInfo().loginKey
 			if desKey == "" {
 				key := cert.CreateDesKey()
 				desKey = base64.StdEncoding.EncodeToString(key)
-				loginKey = desKey
+				GetLoginInfo().setKey(desKey)
 			}
 
 			key, _ := base64.StdEncoding.DecodeString(desKey)
@@ -101,8 +127,8 @@ func (ct *LoginController) Check(c *gin.Context) {
 		return
 	}
 
-	desKey := loginKey
-	if desKey == "" {
+	desKey := GetLoginInfo().loginKey
+	if desKey == "" || GetLoginInfo().CheckExpired(ct.Context.Config.AuthInfo.EXPIRE_TIME) {
 		writeFail(c, "Need Login")
 		return
 	}
