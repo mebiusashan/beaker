@@ -10,27 +10,21 @@ type IndexController struct {
 }
 
 func (ct *IndexController) Do(c *gin.Context) {
-	bodyStr, err := ct.Context.Cache.GET(common.TAG_HOME, "")
-	if err == nil && bodyStr != "" {
-		write200(c, bodyStr)
+	if hasCacheWriteBody(c, ct.Context.Cache, common.TAG_HOME, "") {
 		return
 	}
 
 	pages, err := ct.Context.Model.PageFindAll()
-	if err != nil {
-		ct.Context.Ctrl.ErrC.Do500(c)
+	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	cats, err := ct.Context.Model.CategoryFindAll()
-	if err != nil {
-		ct.Context.Ctrl.ErrC.Do500(c)
+	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
-
 	arcs, err := ct.Context.Model.ArticleFindWithNum(ct.Context.Config.Website.INDEX_LIST_NUM)
-	if err != nil {
-		ct.Context.Ctrl.ErrC.Do500(c)
+	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
@@ -41,9 +35,8 @@ func (ct *IndexController) Do(c *gin.Context) {
 	vars.Set("arcs", arcs)
 	vars.Set("ISINDEX", true)
 
-	bodyStr, err = ct.Context.View.Render(common.TEMPLATE_HOME, vars)
-	if err != nil {
-		ct.Context.Ctrl.ErrC.Do500(c)
+	bodyStr, err := ct.Context.View.Render(common.TEMPLATE_HOME, vars)
+	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
