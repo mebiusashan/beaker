@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/cobra/doc"
 )
 
 var (
@@ -23,6 +24,12 @@ code can be accessed at https://github.com/mebiusashan/beaker.`,
 
 // Execute executes the root command.
 func Execute() error {
+	rootCmd.DisableAutoGenTag = true
+	header := &doc.GenManHeader{
+		Title:   "Beaker",
+		Section: "1",
+	}
+	doc.GenManTree(rootCmd, header, "/usr/local/share/man/man1")
 	return rootCmd.Execute()
 }
 
