@@ -126,6 +126,7 @@ func RunAdmin(isRelease bool) {
 	adminr.POST(net.ADMIN_PAGE_RM, context.Ctrl.PagC.Del)
 	adminr.POST(net.ADMIN_PAGE_LIST, context.Ctrl.PagC.List)
 	adminr.POST(net.ADMIN_PAGE_DOWNLOAD, context.Ctrl.PagC.Down)
+	adminr.POST(net.ADMIN_PAGE_MODIFY, context.Ctrl.PagC.Modify)
 
 	adminr.POST(net.ADMIN_TWEET_ADD, context.Ctrl.TweC.Add)
 	adminr.POST(net.ADMIN_TWEET_RM, context.Ctrl.TweC.Del)

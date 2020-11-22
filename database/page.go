@@ -36,3 +36,17 @@ func (d *Dao) PageDel(id uint) error {
 	err := d.mysql.Delete(&page).Error
 	return err
 }
+
+func (d *Dao) PageUpdate(id uint, m *common.PageModel) error {
+	page, err := d.PageFindByID(id)
+	if err != nil {
+		return err
+	}
+	if m.Content != "" {
+		page.Content = m.Content
+	}
+	if m.Title != "" {
+		page.Title = m.Title
+	}
+	return d.mysql.Model(page).Updates(page).Error
+}

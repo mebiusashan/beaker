@@ -45,5 +45,7 @@ func PageDownload(host string, refresh bool, key []byte, id uint) (string, strin
 }
 
 func PageModify(host string, refresh bool, key []byte, id uint, title string, content string) {
-
+	sendData := common.PageModel{Title: title, Content: content}
+	sendData.ID = id
+	net.PostJsonWithEncrypt(host+net.CLI_PAGE_MODIFY, refresh, key, sendData)
 }

@@ -51,3 +51,14 @@ func (ct *PageController) Down(c *gin.Context) {
 	}
 	writeSucc(c, "", page)
 }
+
+func (ct *PageController) Modify(c *gin.Context) {
+	value, _ := c.Get("data")
+	data := common.PageModel{}
+	json.Unmarshal(value.([]byte), &data)
+	err := ct.Context.Model.PageUpdate(data.ID, &data)
+	if hasErrorWriteFail(c, err) {
+		return
+	}
+	writeSucc(c, "Page modify successfully", "")
+}

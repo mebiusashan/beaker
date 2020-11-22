@@ -18,6 +18,7 @@ const CLI_PAGE_LIST string = "/admin/pag/list"
 const CLI_PAGE_ADD string = "/admin/pag/add"
 const CLI_PAGE_RM string = "/admin/pag/del"
 const CLI_PAGE_DOWN string = "/admin/pag/down"
+const CLI_PAGE_MODIFY string = "/admin/pag/modify"
 
 //category
 const CLI_CAT_LIST string = "/admin/cat/list"
@@ -56,6 +57,7 @@ const ADMIN_PAGE_ADD string = "pag/add"
 const ADMIN_PAGE_RM string = "pag/del"
 const ADMIN_PAGE_LIST string = "pag/list"
 const ADMIN_PAGE_DOWNLOAD string = "pag/down"
+const ADMIN_PAGE_MODIFY string = "/pag/modify"
 
 //tweet
 const ADMIN_TWEET_ADD string = "twe/add"
