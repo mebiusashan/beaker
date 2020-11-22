@@ -47,4 +47,5 @@ func init() {
 	rootCmd.AddCommand(configCmd)
 	rootCmd.AddCommand(lsCmd)
 	rootCmd.AddCommand(lwCmd)
+	rootCmd.AddCommand(completionCmd)
 }
