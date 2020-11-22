@@ -1,21 +1,16 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/mebiusashan/beaker/common"
 	"github.com/mebiusashan/beaker/net"
 )
 
-func TweetAll(host string, curPage uint) {
-	postData := common.TweetListReq{CurPage: curPage}
-	jsonByte, err := json.Marshal(postData)
-	common.Assert(err)
-
-	jsonData := net.PostJson(host+net.CLI_TWEET_LIST, strings.NewReader(string(jsonByte)))
+func TweetAll(host string, refresh bool, key []byte, curPage uint) {
+	sendData := common.TweetListReq{CurPage: curPage}
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_TWEET_LIST, refresh, key, sendData)
 	dd := jsonData.Data.(map[string]interface{})
 
 	maxid := 0
@@ -34,19 +29,13 @@ func TweetAll(host string, curPage uint) {
 	fmt.Println(dd["TotlePage"], "pages,", dd["TweNum"], "tweets, current", dd["CurPage"], "page")
 }
 
-func TweetRm(host string, id uint) {
+func TweetRm(host string, refresh bool, key []byte, id uint) {
 	sendData := common.ArticleModel{}
 	sendData.ID = id
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_TWEET_RM, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_TWEET_RM, refresh, key, sendData)
 }
 
-func TweetAdd(host string, message string) {
+func TweetAdd(host string, refresh bool, key []byte, message string) {
 	sendData := common.TweetModel{Content: message}
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_TWEET_ADD, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_TWEET_ADD, refresh, key, sendData)
 }

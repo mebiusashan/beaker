@@ -15,6 +15,6 @@ template or some settings, you need to
 execute clean to clear the server's cache.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		checkWebsite()
-		cli.CleanCache(getWebsiteInfo().HOST)
+		cli.CleanCache(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey())
 	},
 }

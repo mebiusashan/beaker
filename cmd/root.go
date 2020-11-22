@@ -6,6 +6,7 @@ import (
 
 var (
 	actionWebsite string
+	refresh       bool
 
 	rootCmd = &cobra.Command{
 		Use:   "beaker",
@@ -29,7 +30,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVarP(&actionWebsite, "website", "w", "default", "Set the blog you want to push, the blog can be set in the config command")
-	rootCmd.PersistentFlags().BoolP("refresh", "r", true, "refresh server cache")
+	rootCmd.PersistentFlags().BoolVarP(&refresh, "refresh", "r", true, "refresh server cache")
 
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(rmCmd)

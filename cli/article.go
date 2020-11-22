@@ -1,16 +1,14 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/mebiusashan/beaker/common"
 	"github.com/mebiusashan/beaker/net"
 )
 
-func ArtAll(host string) {
-	jsonData := net.PostJson(host+net.CLI_ART_LIST, strings.NewReader(""))
+func ArtAll(host string, refresh bool, key []byte) {
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_ART_LIST, refresh, key, "")
 
 	for _, va := range jsonData.Data.([]interface{}) {
 		v := va.(map[string]interface{})
@@ -18,35 +16,26 @@ func ArtAll(host string) {
 	}
 }
 
-func ArtRm(host string, id uint) {
+func ArtRm(host string, refresh bool, key []byte, id uint) {
 	sendData := common.ArticleModel{}
 	sendData.ID = id
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_ART_RM, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_ART_RM, refresh, key, sendData)
 }
 
-func ArtAdd(host string, content string, title string, cid uint) {
+func ArtAdd(host string, refresh bool, key []byte, content string, title string, cid uint) {
 	sendData := common.ArticleModel{Title: title, Content: content}
 	sendData.Catid = cid
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_ART_ADD, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_ART_ADD, refresh, key, sendData)
 }
 
-func ArtDownload(host string, id uint) (string, string) {
+func ArtDownload(host string, refresh bool, key []byte, id uint) (string, string) {
 	sendData := common.ArticleModel{}
 	sendData.ID = id
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	jsonData := net.PostJson(host+net.CLI_ART_DOWN, strings.NewReader(string(jsonByte)))
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_ART_DOWN, refresh, key, sendData)
 	data := jsonData.Data.(map[string]interface{})
 	return data["Title"].(string), data["Content"].(string)
 }
 
-func ArtModify(host string, id uint, catId uint, title string, content string) {
+func ArtModify(host string, refresh bool, key []byte, id uint, catId uint, title string, content string) {
 
 }

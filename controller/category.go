@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/common"
 )
@@ -11,7 +13,8 @@ type CategoryController struct {
 
 func (ct *CategoryController) Add(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.CatModel)
+	data := common.CatModel{}
+	json.Unmarshal(value.([]byte), &data)
 	if data.Name == "" || data.Alias == "" {
 		writeFail(c, "Null values ​​are not allowed")
 		return
@@ -25,7 +28,8 @@ func (ct *CategoryController) Add(c *gin.Context) {
 
 func (ct *CategoryController) Del(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.CatRmReq)
+	data := common.CatRmReq{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.ArticleUpdateCat(data.ID, data.MvID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -47,7 +51,8 @@ func (ct *CategoryController) All(c *gin.Context) {
 
 func (ct *CategoryController) Update(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.CatModel)
+	data := common.CatModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.CategoryUpdate(data.ID, data.Name, data.Alias)
 	if hasErrorWriteFail(c, err) {
 		return

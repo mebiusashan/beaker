@@ -3,13 +3,12 @@ package cli
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/mebiusashan/beaker/net"
 )
 
-func OptAll(host string) {
-	jsonData := net.PostJson(host+net.CLI_OPTION, strings.NewReader(""))
+func OptAll(host string, refresh bool, key []byte) {
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_OPTION, refresh, key, "")
 
 	max := 0
 	for k := range jsonData.Data.(map[string]interface{}) {

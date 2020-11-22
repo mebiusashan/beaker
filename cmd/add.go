@@ -50,7 +50,7 @@ ID of the classification to which the chapter belongs`,
 				fileSuffix := path.Ext(filenameWithSuffix)
 				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 			}
-			cli.ArtAdd(getWebsiteInfo().HOST, string(content), title, addArticleCatId)
+			cli.ArtAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), string(content), title, addArticleCatId)
 		},
 	}
 
@@ -76,7 +76,7 @@ ID of the classification to which the chapter belongs`,
 				fileSuffix := path.Ext(filenameWithSuffix)
 				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 			}
-			cli.PageAdd(getWebsiteInfo().HOST, string(content), title)
+			cli.PageAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), string(content), title)
 		},
 	}
 
@@ -91,7 +91,7 @@ need to write the content to be sent in the message tag`,
 			if addTweetMsg == "" {
 				common.Err("Message cannot be empty")
 			}
-			cli.TweetAdd(getWebsiteInfo().HOST, addTweetMsg)
+			cli.TweetAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), addTweetMsg)
 		},
 	}
 
@@ -106,7 +106,7 @@ need to write the content to be sent in the message tag`,
 			if addCategoryAlias == "" {
 				common.Err("Alias cannot be empty")
 			}
-			cli.CatAdd(getWebsiteInfo().HOST, args[0], addCategoryAlias)
+			cli.CatAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), args[0], addCategoryAlias)
 		},
 	}
 )

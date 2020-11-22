@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/common"
 )
@@ -11,7 +13,8 @@ type ArticleController struct {
 
 func (ct *ArticleController) Add(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.ArticleModel)
+	data := common.ArticleModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.ArticleAdd(data.Catid, data.Title, data.Content)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -21,7 +24,8 @@ func (ct *ArticleController) Add(c *gin.Context) {
 
 func (ct *ArticleController) Del(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.ArticleModel)
+	data := common.ArticleModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.ArticleDel(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -39,7 +43,8 @@ func (ct *ArticleController) All(c *gin.Context) {
 
 func (ct *ArticleController) Down(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.ArticleModel)
+	data := common.ArticleModel{}
+	json.Unmarshal(value.([]byte), &data)
 	art, err := ct.Context.Model.ArticleFindByID(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return

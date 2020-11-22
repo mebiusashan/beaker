@@ -1,11 +1,9 @@
 package cli
 
 import (
-	"strings"
-
 	"github.com/mebiusashan/beaker/net"
 )
 
-func CleanCache(host string) {
-	net.PostJson(host+net.CLI_CLEAN, strings.NewReader(""))
+func CleanCache(host string, refresh bool, key []byte) {
+	net.PostJsonWithEncrypt(host+net.CLI_CLEAN, refresh, key, "")
 }

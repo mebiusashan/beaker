@@ -1,17 +1,15 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/mebiusashan/beaker/common"
 	"github.com/mebiusashan/beaker/net"
 )
 
-func CatAll(host string) {
-	jsonData := net.PostJson(host+net.CLI_CAT_LIST, strings.NewReader(""))
+func CatAll(host string, refresh bool, key []byte) {
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_CAT_LIST, refresh, key, "")
 
 	maxid := 0
 	maxcname := 0
@@ -31,29 +29,20 @@ func CatAll(host string) {
 	}
 }
 
-func CatRm(host string, id uint, mid uint) {
+func CatRm(host string, refresh bool, key []byte, id uint, mid uint) {
 	sendData := common.CatRmReq{}
 	sendData.ID = id
 	sendData.MvID = mid
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_CAT_RM, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_CAT_RM, refresh, key, sendData)
 }
 
-func CatAdd(host string, name string, alias string) {
+func CatAdd(host string, refresh bool, key []byte, name string, alias string) {
 	sendData := common.CatModel{Alias: alias, Name: name}
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_CAT_ADD, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_CAT_ADD, refresh, key, sendData)
 }
 
-func CatModify(host string, id uint, name string, alias string) {
+func CatModify(host string, refresh bool, key []byte, id uint, name string, alias string) {
 	sendData := common.CatModel{Alias: alias, Name: name}
 	sendData.ID = id
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_CAT_MODIFY, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_CAT_MODIFY, refresh, key, sendData)
 }

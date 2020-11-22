@@ -46,7 +46,7 @@ modify the name and alias`,
 			if name == "" && alias == "" {
 				common.Err("There are no changes")
 			}
-			cli.CatModify(getWebsiteInfo().HOST, modifyCatId, name, alias)
+			cli.CatModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), modifyCatId, name, alias)
 		},
 	}
 
@@ -66,7 +66,7 @@ article title and category`,
 			common.Assert(err)
 			curPath, err := os.Getwd()
 			common.Assert(err)
-			title, content := cli.ArtDownload(getWebsiteInfo().HOST, uint(id))
+			title, content := cli.ArtDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 			curPath = curPath + "/" + title + ".md"
 			err = ioutil.WriteFile(curPath, []byte(content), 0666)
 			common.Assert(err)
@@ -74,7 +74,7 @@ article title and category`,
 			//edit file complete, push file
 			newContent, err := ioutil.ReadFile(curPath)
 			common.Assert(err)
-			cli.ArtModify(getWebsiteInfo().HOST, uint(id), modifyCatId, modifyTitle, string(newContent))
+			cli.ArtModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyCatId, modifyTitle, string(newContent))
 			if modifyDelFile {
 				err = os.Remove(curPath)
 				common.Assert(err)
@@ -98,7 +98,7 @@ page title`,
 			common.Assert(err)
 			curPath, err := os.Getwd()
 			common.Assert(err)
-			title, content := cli.PageDownload(getWebsiteInfo().HOST, uint(id))
+			title, content := cli.PageDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 			curPath = curPath + "/" + title + ".md"
 			err = ioutil.WriteFile(curPath, []byte(content), 0666)
 			common.Assert(err)
@@ -106,7 +106,7 @@ page title`,
 			//edit file complete, push file
 			newContent, err := ioutil.ReadFile(curPath)
 			common.Assert(err)
-			cli.PageModify(getWebsiteInfo().HOST, uint(id), modifyTitle, string(newContent))
+			cli.PageModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyTitle, string(newContent))
 			if modifyDelFile {
 				err = os.Remove(curPath)
 				common.Assert(err)

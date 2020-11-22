@@ -26,7 +26,7 @@ var (
 				}
 				id, err := strconv.Atoi(args[0])
 				common.Assert(err)
-				cli.ArtRm(getWebsiteInfo().HOST, uint(id))
+				cli.ArtRm(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 				return
 			}
 			if pagerm {
@@ -35,7 +35,7 @@ var (
 				}
 				id, err := strconv.Atoi(args[0])
 				common.Assert(err)
-				cli.PageRm(getWebsiteInfo().HOST, uint(id))
+				cli.PageRm(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 				return
 			}
 			if tweetrm {
@@ -44,7 +44,7 @@ var (
 				}
 				id, err := strconv.Atoi(args[0])
 				common.Assert(err)
-				cli.TweetRm(getWebsiteInfo().HOST, uint(id))
+				cli.TweetRm(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 				return
 			}
 
@@ -56,7 +56,7 @@ var (
 				common.Assert(err)
 				mid, err := strconv.Atoi(args[1])
 				common.Assert(err)
-				cli.CatRm(getWebsiteInfo().HOST, uint(id), uint(mid))
+				cli.CatRm(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), uint(mid))
 				return
 			}
 		},

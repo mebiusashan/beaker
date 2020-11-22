@@ -1,17 +1,15 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/mebiusashan/beaker/common"
 	"github.com/mebiusashan/beaker/net"
 )
 
-func PageAll(host string) {
-	jsonData := net.PostJson(host+net.CLI_PAGE_LIST, strings.NewReader(""))
+func PageAll(host string, refresh bool, key []byte) {
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_PAGE_LIST, refresh, key, "")
 
 	maxid := 0
 	for _, va := range jsonData.Data.([]interface{}) {
@@ -27,34 +25,25 @@ func PageAll(host string) {
 	}
 }
 
-func PageRm(host string, id uint) {
+func PageRm(host string, refresh bool, key []byte, id uint) {
 	sendData := common.ArticleModel{}
 	sendData.ID = id
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_PAGE_RM, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_PAGE_RM, refresh, key, sendData)
 }
 
-func PageAdd(host string, content string, title string) {
+func PageAdd(host string, refresh bool, key []byte, content string, title string) {
 	sendData := common.PageModel{Title: title, Content: content}
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	net.PostJson(host+net.CLI_PAGE_ADD, strings.NewReader(string(jsonByte)))
+	net.PostJsonWithEncrypt(host+net.CLI_PAGE_ADD, refresh, key, sendData)
 }
 
-func PageDownload(host string, id uint) (string, string) {
+func PageDownload(host string, refresh bool, key []byte, id uint) (string, string) {
 	sendData := common.ArticleModel{}
 	sendData.ID = id
-	jsonByte, err := json.Marshal(sendData)
-	common.Assert(err)
-
-	jsonData := net.PostJson(host+net.CLI_PAGE_DOWN, strings.NewReader(string(jsonByte)))
+	jsonData := net.PostJsonWithEncrypt(host+net.CLI_PAGE_DOWN, refresh, key, sendData)
 	data := jsonData.Data.(map[string]interface{})
 	return data["Title"].(string), data["Content"].(string)
 }
 
-func PageModify(host string, id uint, title string, content string) {
+func PageModify(host string, refresh bool, key []byte, id uint, title string, content string) {
 
 }

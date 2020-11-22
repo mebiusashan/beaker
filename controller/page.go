@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/common"
 )
@@ -11,7 +13,8 @@ type PageController struct {
 
 func (ct *PageController) Add(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.PageModel)
+	data := common.PageModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.PageAdd(data.Title, data.Content)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -21,7 +24,8 @@ func (ct *PageController) Add(c *gin.Context) {
 
 func (ct *PageController) Del(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.PageModel)
+	data := common.PageModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.PageDel(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -39,7 +43,8 @@ func (ct *PageController) List(c *gin.Context) {
 
 func (ct *PageController) Down(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.PageModel)
+	data := common.PageModel{}
+	json.Unmarshal(value.([]byte), &data)
 	page, err := ct.Context.Model.PageFindByID(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return

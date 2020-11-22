@@ -24,6 +24,10 @@ type config struct {
 	Websites       []websiteConfig
 }
 
+func (c *websiteConfig) GetKey() []byte {
+	return []byte(c.Key)
+}
+
 var (
 	localConfig         config
 	addWebSiteAlias     string

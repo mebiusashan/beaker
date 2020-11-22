@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"math"
 	"strconv"
 
@@ -35,7 +36,8 @@ func (ct *TweetController) createPageNum(count uint) []uint {
 
 func (ct *TweetController) Add(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.TweetModel)
+	data := common.TweetModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.TweetAdd(data.Content)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -45,7 +47,8 @@ func (ct *TweetController) Add(c *gin.Context) {
 
 func (ct *TweetController) Del(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.TweetModel)
+	data := common.TweetModel{}
+	json.Unmarshal(value.([]byte), &data)
 	err := ct.Context.Model.TweetDel(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -55,7 +58,8 @@ func (ct *TweetController) Del(c *gin.Context) {
 
 func (ct *TweetController) List(c *gin.Context) {
 	value, _ := c.Get("data")
-	data := value.(common.TweetListResp)
+	data := common.TweetListResp{}
+	json.Unmarshal(value.([]byte), &data)
 	var page uint = 1
 	if data.CurPage >= 1 {
 		page = data.CurPage
