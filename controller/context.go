@@ -30,6 +30,8 @@ type BaseController struct {
 	Context *Context
 }
 
+var controllerContext *Context
+
 func NewContext() *Context {
 	c := new(Context)
 	c.Ctrl = new(Controller)
@@ -49,5 +51,6 @@ func NewContext() *Context {
 	c.Ctrl.IndC.Context = c
 	c.Ctrl.OptC.Context = c
 	c.Ctrl.LoginC.Context = c
+	controllerContext = c
 	return c
 }

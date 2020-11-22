@@ -106,6 +106,8 @@ func RunAdmin() {
 
 	adminr := router.Group(net.ADMIN_GROUP_ADMIN)
 	adminr.Use(controller.LoginExpiredCheck())
+	adminr.Use(controller.DecodeForAdmin())
+	adminr.Use(controller.RefreshCache())
 
 	adminr.POST(net.ADMIN_ART_ADD, context.Ctrl.ArtC.Add)
 	adminr.POST(net.ADMIN_ART_RM, context.Ctrl.ArtC.Del)
