@@ -12,22 +12,22 @@ func (ct *CategoryController) Do(c *gin.Context) {
 	}
 
 	pages, err := ct.Context.Model.PageFindAll()
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	cats, err := ct.Context.Model.CategoryFindAll()
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	cat, err := ct.Context.Model.CategoryFindByAlias(alias)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	arcs, err := ct.Context.Model.ArticleFindByCatID(cat.ID)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
@@ -38,7 +38,7 @@ func (ct *CategoryController) Do(c *gin.Context) {
 	vars.Set("arcs", arcs)
 
 	bodyStr, err := ct.Context.View.Render(common.TEMPLATE_CAT, vars)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 

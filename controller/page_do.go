@@ -20,7 +20,7 @@ func (ct *PageController) Do(c *gin.Context) {
 	}
 
 	page, err := ct.Context.Model.PageFindByID(uint(id))
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
@@ -30,7 +30,7 @@ func (ct *PageController) Do(c *gin.Context) {
 	vars.Set("title", page.Title)
 
 	bodyStr, err = ct.Context.View.Render(common.TEMPLATE_PAGE, vars)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 	ct.Context.Cache.SETNX(common.TAG_PAGE, idstr, bodyStr, ct.Context.Config.Redis.EXPIRE_TIME)

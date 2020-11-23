@@ -15,16 +15,16 @@ func (ct *IndexController) Do(c *gin.Context) {
 	}
 
 	pages, err := ct.Context.Model.PageFindAll()
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	cats, err := ct.Context.Model.CategoryFindAll()
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 	arcs, err := ct.Context.Model.ArticleFindWithNum(ct.Context.Config.Website.INDEX_LIST_NUM)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
@@ -36,7 +36,7 @@ func (ct *IndexController) Do(c *gin.Context) {
 	vars.Set("ISINDEX", true)
 
 	bodyStr, err := ct.Context.View.Render(common.TEMPLATE_HOME, vars)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 

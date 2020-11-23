@@ -19,7 +19,7 @@ func (ct *ArticleController) Do(c *gin.Context) {
 	}
 
 	arts, err := ct.Context.Model.ArticleFindByID(uint(id))
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 

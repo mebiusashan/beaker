@@ -18,17 +18,17 @@ func (ct *TweetController) Do(c *gin.Context) {
 	}
 
 	tws, err := ct.Context.Model.TweetFindByNum(page, numOfOnePage)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	pages, err := ct.Context.Model.PageFindAll()
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
 	cats, err := ct.Context.Model.CategoryFindAll()
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 
@@ -41,7 +41,7 @@ func (ct *TweetController) Do(c *gin.Context) {
 	vars.Set("twcurpage", page)
 
 	bodyStr, err := ct.Context.View.Render(common.TEMPLATE_TWEET, vars)
-	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 	write200(c, bodyStr)
