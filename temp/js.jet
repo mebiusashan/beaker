@@ -1,4 +1,5 @@
 {{block js()}}
+<script>
 MathJax = {
     tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
   };
