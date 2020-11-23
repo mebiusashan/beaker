@@ -30,8 +30,10 @@ type Database struct {
 }
 
 type Server struct {
-	PORT string
-	URL  string
+	PORT               string
+	URL                string
+	SITE_URL           string
+	STATIC_FILE_FOLDER string
 }
 
 type Redis struct {
@@ -43,12 +45,10 @@ type Redis struct {
 
 type Website struct {
 	SITE_NAME          string
-	SITE_URL           string
 	SITE_DES           string
 	SITE_FOOTER        string
 	INDEX_LIST_NUM     uint
 	TEMP_FOLDER        string
-	STATIC_FILE_FOLDER string
 	TWEET_NUM_ONE_PAGE uint
 	SITE_KEYWORDS      string
 }
@@ -94,6 +94,12 @@ func (t *Server) check() error {
 	if t.URL == "" {
 		return errors.New("Server's URL is empty.")
 	}
+	if t.STATIC_FILE_FOLDER == "" {
+		return errors.New("Website's STATIC_FILE_FOLDER is empty.")
+	}
+	if t.SITE_URL == "" {
+		return errors.New("Website's SITE_URL is empty.")
+	}
 	return nil
 }
 
@@ -114,14 +120,8 @@ func (t *Redis) check() error {
 }
 
 func (t *Website) check() error {
-	if t.STATIC_FILE_FOLDER == "" {
-		return errors.New("Website's STATIC_FILE_FOLDER is empty.")
-	}
 	if t.TEMP_FOLDER == "" {
 		return errors.New("Website's TEMP_FOLDER is empty.")
-	}
-	if t.SITE_URL == "" {
-		return errors.New("Website's SITE_URL is empty.")
 	}
 	if t.SITE_NAME == "" {
 		t.SITE_NAME = common.Def_Website_SITE_NAME

@@ -15,13 +15,14 @@ func (ct *PageController) Add(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.PageModel{}
 	json.Unmarshal(value.([]byte), &data)
-	err := ct.Context.Model.PageAdd(data.Title, data.Content)
+	md := writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
+	err := ct.Context.Model.PageAdd(data.Title, md)
 	if hasErrorWriteFail(c, err) {
 		return
 	}
+
 	writeSucc(c, "Page added successfully", nil)
 }
-
 func (ct *PageController) Del(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.PageModel{}
@@ -56,6 +57,7 @@ func (ct *PageController) Modify(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.PageModel{}
 	json.Unmarshal(value.([]byte), &data)
+	data.Content = writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
 	err := ct.Context.Model.PageUpdate(data.ID, &data)
 	if hasErrorWriteFail(c, err) {
 		return

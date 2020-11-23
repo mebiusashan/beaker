@@ -50,7 +50,8 @@ ID of the classification to which the chapter belongs`,
 				fileSuffix := path.Ext(filenameWithSuffix)
 				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 			}
-			cli.ArtAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), string(content), title, addArticleCatId)
+			mdStr, imgs := convMarkdownImage(content, mdPath)
+			cli.ArtAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), mdStr, title, addArticleCatId, imgs)
 		},
 	}
 
@@ -76,7 +77,8 @@ ID of the classification to which the chapter belongs`,
 				fileSuffix := path.Ext(filenameWithSuffix)
 				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 			}
-			cli.PageAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), string(content), title)
+			mdStr, imgs := convMarkdownImage(content, mdPath)
+			cli.PageAdd(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), mdStr, title, imgs)
 		},
 	}
 
@@ -113,6 +115,20 @@ It is recommended to use English words with corresponding meanings`,
 		},
 	}
 )
+
+func convMarkdownImage(markdown []byte, mdPath string) (string, []common.ImgInfo) {
+	imgPaths := FindImageURL(markdown)
+	mdStr := string(markdown)
+	filenameWithSuffix := path.Base(mdPath)
+	for i := 0; i < len(imgPaths); i++ {
+		info := imgPaths[i]
+		info.Read(mdPath[0 : len(mdPath)-len(filenameWithSuffix)])
+		if info.Readed {
+			mdStr = strings.ReplaceAll(mdStr, info.Path, info.Md5+info.Suffix)
+		}
+	}
+	return mdStr, imgPaths
+}
 
 func init() {
 	addArticleCmd.PersistentFlags().UintVarP(&addArticleCatId, "catid", "i", 0, "category ID of the article")

@@ -31,8 +31,8 @@ func PageRm(host string, refresh bool, key []byte, id uint) {
 	net.PostJsonWithEncrypt(host+net.CLI_PAGE_RM, refresh, key, sendData)
 }
 
-func PageAdd(host string, refresh bool, key []byte, content string, title string) {
-	sendData := common.PageModel{Title: title, Content: content}
+func PageAdd(host string, refresh bool, key []byte, content string, title string, imgInfos []common.ImgInfo) {
+	sendData := common.PageModel{Title: title, Content: content, Imgs: imgInfos}
 	net.PostJsonWithEncrypt(host+net.CLI_PAGE_ADD, refresh, key, sendData)
 }
 
@@ -44,8 +44,8 @@ func PageDownload(host string, refresh bool, key []byte, id uint) (string, strin
 	return data["Title"].(string), data["Content"].(string)
 }
 
-func PageModify(host string, refresh bool, key []byte, id uint, title string, content string) {
-	sendData := common.PageModel{Title: title, Content: content}
+func PageModify(host string, refresh bool, key []byte, id uint, title string, content string, imgInfos []common.ImgInfo) {
+	sendData := common.PageModel{Title: title, Content: content, Imgs: imgInfos}
 	sendData.ID = id
 	net.PostJsonWithEncrypt(host+net.CLI_PAGE_MODIFY, refresh, key, sendData)
 }

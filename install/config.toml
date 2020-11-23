@@ -1,6 +1,5 @@
 [website]
 SITE_NAME = "Beaker"
-SITE_URL = "-SITE_URL"
 SITE_DES = "a simple blog system"
 SITE_FOOTER = "Beaker is a simple blog system. [github.com/mebiusashan/beaker]"
 SITE_KEYWORDS = "beaker, golang, blog"
@@ -8,11 +7,12 @@ SITE_KEYWORDS = "beaker, golang, blog"
 INDEX_LIST_NUM = 30
 TWEET_NUM_ONE_PAGE = 10
 TEMP_FOLDER = "-TEMP_FOLDER/temp"
-STATIC_FILE_FOLDER = "-STATIC_FILE_FOLDER/static/"
 
 [server]
 PORT = ":-PORT"
 URL = "localhost"
+STATIC_FILE_FOLDER = "-STATIC_FILE_FOLDER/static/"
+SITE_URL = "-SITE_URL"
 
 [redis]
 REDIS_IP = "127.0.0.1"

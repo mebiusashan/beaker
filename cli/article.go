@@ -22,8 +22,8 @@ func ArtRm(host string, refresh bool, key []byte, id uint) {
 	net.PostJsonWithEncrypt(host+net.CLI_ART_RM, refresh, key, sendData)
 }
 
-func ArtAdd(host string, refresh bool, key []byte, content string, title string, cid uint) {
-	sendData := common.ArticleModel{Title: title, Content: content}
+func ArtAdd(host string, refresh bool, key []byte, content string, title string, cid uint, imgInfos []common.ImgInfo) {
+	sendData := common.ArticleModel{Title: title, Content: content, Imgs: imgInfos}
 	sendData.Catid = cid
 	net.PostJsonWithEncrypt(host+net.CLI_ART_ADD, refresh, key, sendData)
 }
@@ -36,8 +36,8 @@ func ArtDownload(host string, refresh bool, key []byte, id uint) (string, string
 	return data["Title"].(string), data["Content"].(string)
 }
 
-func ArtModify(host string, refresh bool, key []byte, id uint, catId uint, title string, content string) {
-	sendData := common.ArticleModel{}
+func ArtModify(host string, refresh bool, key []byte, id uint, catId uint, title string, content string, imgInfos []common.ImgInfo) {
+	sendData := common.ArticleModel{Imgs: imgInfos}
 	sendData.ID = id
 	sendData.Catid = catId
 	sendData.Title = title

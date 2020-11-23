@@ -8,6 +8,8 @@ EXPIRE_TIME=25200
 [server]
 PORT = ":-PORT"
 URL = "localhost"
+STATIC_FILE_FOLDER = "-STATIC_FILE_FOLDER/static/"
+SITE_URL = "-SITE_URL"
 
 [redis]
 REDIS_IP = "127.0.0.1"

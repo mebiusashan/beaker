@@ -23,7 +23,8 @@ func (ct *ArticleController) Add(c *gin.Context) {
 		writeFail(c, "category's id not found")
 		return
 	}
-	err = ct.Context.Model.ArticleAdd(data.Catid, data.Title, data.Content)
+	md := writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
+	err = ct.Context.Model.ArticleAdd(data.Catid, data.Title, md)
 	if hasErrorWriteFail(c, err) {
 		return
 	}
@@ -64,6 +65,7 @@ func (ct *ArticleController) Modify(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.ArticleModel{}
 	json.Unmarshal(value.([]byte), &data)
+	data.Content = writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
 	err := ct.Context.Model.ArticleUpdate(data.ID, &data)
 	if hasErrorWriteFail(c, err) {
 		return

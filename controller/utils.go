@@ -1,12 +1,15 @@
 package controller
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/cache"
 	"github.com/mebiusashan/beaker/common"
+	"github.com/mebiusashan/beaker/config"
 )
 
 func write200(c *gin.Context, body string) {
@@ -87,4 +90,28 @@ func hasErrDo500(c *gin.Context, ct *ErrerController, err error) bool {
 		return true
 	}
 	return false
+}
+
+func writeMarkdownImage(config config.Server, markdown string, imgs []common.ImgInfo) string {
+	for i := 0; i < len(imgs); i++ {
+		info := imgs[i]
+		markdown = strings.ReplaceAll(markdown, info.Md5, config.SITE_URL+"/"+info.Md5)
+		dec, err := base64.StdEncoding.DecodeString(info.Base64)
+		if err != nil {
+			continue
+		}
+		f, err := os.Create(config.STATIC_FILE_FOLDER + info.Md5 + "." + info.Suffix)
+		if err != nil {
+			continue
+		}
+		defer f.Close()
+
+		if _, err := f.Write(dec); err != nil {
+			continue
+		}
+		if err := f.Sync(); err != nil {
+			continue
+		}
+	}
+	return markdown
 }

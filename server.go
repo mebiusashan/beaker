@@ -2,6 +2,7 @@ package beaker
 
 import (
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func RunServer(isRelease bool) {
 	model.SetMaxOpenConns(config.Database.MAX_OPEN_NUM)
 
 	vr := view.NewViewRender(config.Website.TEMP_FOLDER)
-	vr.SetDefaultVar(config.Website.SITE_NAME, config.Website.SITE_URL, config.Website.SITE_DES, config.Website.SITE_FOOTER, config.Website.SITE_KEYWORDS)
+	vr.SetDefaultVar(config.Website.SITE_NAME, config.Server.SITE_URL, config.Website.SITE_DES, config.Website.SITE_FOOTER, config.Website.SITE_KEYWORDS)
 
 	context := controller.NewContext()
 	context.Cache = cac
@@ -41,9 +42,9 @@ func RunServer(isRelease bool) {
 	}
 
 	router := gin.Default()
-	//router.StaticFS("/static", http.Dir(config.Website.STATIC_FILE_FOLDER))
-	router.StaticFile("/b.css", config.Website.STATIC_FILE_FOLDER+"/b.css")
-	router.StaticFile("/favicon.ico", config.Website.STATIC_FILE_FOLDER+"/favicon.ico")
+	router.StaticFS("/static", http.Dir(config.Server.STATIC_FILE_FOLDER))
+	router.StaticFile("/b.css", config.Server.STATIC_FILE_FOLDER+"/b.css")
+	router.StaticFile("/favicon.ico", config.Server.STATIC_FILE_FOLDER+"/favicon.ico")
 
 	router.GET(net.SERVER_INDEX, context.Ctrl.IndC.Do)
 	router.GET(net.SERVER_TWEET, context.Ctrl.TweC.Do)

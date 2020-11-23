@@ -74,7 +74,8 @@ article title and category`,
 			//edit file complete, push file
 			newContent, err := ioutil.ReadFile(curPath)
 			common.Assert(err)
-			cli.ArtModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyCatId, modifyTitle, string(newContent))
+			mdStr, imgs := convMarkdownImage(newContent, curPath)
+			cli.ArtModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyCatId, modifyTitle, mdStr, imgs)
 			if modifyDelFile {
 				err = os.Remove(curPath)
 				common.Assert(err)
@@ -106,7 +107,8 @@ page title`,
 			//edit file complete, push file
 			newContent, err := ioutil.ReadFile(curPath)
 			common.Assert(err)
-			cli.PageModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyTitle, string(newContent))
+			mdStr, imgs := convMarkdownImage(newContent, curPath)
+			cli.PageModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyTitle, mdStr, imgs)
 			if modifyDelFile {
 				err = os.Remove(curPath)
 				common.Assert(err)

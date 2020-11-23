@@ -7,12 +7,14 @@ type ArticleModel struct {
 	Catid   uint
 	Title   string
 	Content string
+	Imgs    []ImgInfo `gorm:"-"`
 }
 
 type PageModel struct {
 	gorm.Model
 	Title   string
 	Content string
+	Imgs    []ImgInfo `gorm:"-"`
 }
 
 type TweetModel struct {
