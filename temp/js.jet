@@ -1,2 +1,7 @@
 {{block js()}}
+MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+  };
+ </script>
+<script id="MathJax-script" src="https://cdn.bootcss.com/mathjax/3.0.5/es5/tex-mml-chtml.js"></script>
 {{end}}
