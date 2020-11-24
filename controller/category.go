@@ -19,6 +19,10 @@ func (ct *CategoryController) Add(c *gin.Context) {
 		writeFail(c, "Null values ​​are not allowed")
 		return
 	}
+	if data.Alias == "static" {
+		writeFail(c, "static is a reserved word")
+		return
+	}
 	err := ct.Context.Model.CategoryAdd(data.Name, data.Alias)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -61,6 +65,10 @@ func (ct *CategoryController) Update(c *gin.Context) {
 	value, _ := c.Get("data")
 	data := common.CatModel{}
 	json.Unmarshal(value.([]byte), &data)
+	if data.Alias == "static" {
+		writeFail(c, "static is a reserved word")
+		return
+	}
 	err := ct.Context.Model.CategoryUpdate(data.ID, data.Name, data.Alias)
 	if hasErrorWriteFail(c, err) {
 		return

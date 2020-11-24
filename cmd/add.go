@@ -116,20 +116,6 @@ It is recommended to use English words with corresponding meanings`,
 	}
 )
 
-func convMarkdownImage(markdown []byte, mdPath string) (string, []common.ImgInfo) {
-	imgPaths := FindImageURL(markdown)
-	mdStr := string(markdown)
-	filenameWithSuffix := path.Base(mdPath)
-	for i := 0; i < len(imgPaths); i++ {
-		info := imgPaths[i]
-		info.Read(mdPath[0 : len(mdPath)-len(filenameWithSuffix)])
-		if info.Readed {
-			mdStr = strings.ReplaceAll(mdStr, info.Path, info.Md5+info.Suffix)
-		}
-	}
-	return mdStr, imgPaths
-}
-
 func init() {
 	addArticleCmd.PersistentFlags().UintVarP(&addArticleCatId, "catid", "i", 0, "category ID of the article")
 	addArticleCmd.PersistentFlags().StringVarP(&addArticleTitle, "title", "t", "", "title of the article")

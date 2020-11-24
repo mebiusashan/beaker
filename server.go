@@ -1,8 +1,8 @@
 package beaker
 
 import (
+	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +42,8 @@ func RunServer(isRelease bool) {
 	}
 
 	router := gin.Default()
-	router.StaticFS("/static", http.Dir(config.Server.STATIC_FILE_FOLDER))
+	fmt.Println(config.Server.STATIC_FILE_FOLDER)
+	router.Static("/static", config.Server.STATIC_FILE_FOLDER)
 	router.StaticFile("/b.css", config.Server.STATIC_FILE_FOLDER+"/b.css")
 	router.StaticFile("/favicon.ico", config.Server.STATIC_FILE_FOLDER+"/favicon.ico")
 

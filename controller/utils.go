@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -92,24 +93,31 @@ func hasErrDo500(c *gin.Context, ct *ErrerController, err error) bool {
 	return false
 }
 
-func writeMarkdownImage(config config.Server, markdown string, imgs []common.ImgInfo) string {
+func writeMarkdownImage(config config.Server, content string, imgs []common.ImgInfo) string {
+	markdown := content
+	fmt.Println(content, len(imgs), config.SITE_URL)
 	for i := 0; i < len(imgs); i++ {
 		info := imgs[i]
-		markdown = strings.ReplaceAll(markdown, info.Md5, config.SITE_URL+"/"+info.Md5)
+		fmt.Println("md5:", info.Md5)
+		markdown = strings.ReplaceAll(markdown, "("+info.Md5, "("+config.SITE_URL+"/static/"+info.Md5)
 		dec, err := base64.StdEncoding.DecodeString(info.Base64)
 		if err != nil {
+			fmt.Println(1, err)
 			continue
 		}
-		f, err := os.Create(config.STATIC_FILE_FOLDER + info.Md5 + "." + info.Suffix)
+		f, err := os.Create(config.STATIC_FILE_FOLDER + info.Md5 + info.Suffix)
 		if err != nil {
+			fmt.Println(1, err)
 			continue
 		}
 		defer f.Close()
 
 		if _, err := f.Write(dec); err != nil {
+			fmt.Println(2, err)
 			continue
 		}
 		if err := f.Sync(); err != nil {
+			fmt.Println(3, err)
 			continue
 		}
 	}

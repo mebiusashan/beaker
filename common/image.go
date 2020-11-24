@@ -18,10 +18,10 @@ type ImgInfo struct {
 	Readed bool
 }
 
-func (info *ImgInfo) Read(parentPath string) {
-	filenameWithSuffix := path.Base(info.Path)
-	info.Suffix = path.Ext(filenameWithSuffix)
-	filePath := parentPath + "/" + info.Path
+func (imgInfo *ImgInfo) Read(parentPath string) {
+	filenameWithSuffix := path.Base(imgInfo.Path)
+	imgInfo.Suffix = path.Ext(filenameWithSuffix)
+	filePath := parentPath + "/" + imgInfo.Path
 	file, err := os.Open(filePath)
 	if err != nil {
 		return
@@ -39,13 +39,18 @@ func (info *ImgInfo) Read(parentPath string) {
 	if err != nil {
 		return
 	}
-	info.Base64 = base64.StdEncoding.EncodeToString(buf)
+	imgInfo.Base64 = base64.StdEncoding.EncodeToString(buf)
 
+	md5file, err := os.Open(filePath)
+	if err != nil {
+		return
+	}
+	defer md5file.Close()
 	hash := md5.New()
-	if _, err := io.Copy(hash, file); err != nil {
+	if _, err := io.Copy(hash, md5file); err != nil {
 		return
 	}
 	hashInBytes := hash.Sum(nil)[:16]
-	info.Md5 = hex.EncodeToString(hashInBytes)
-	info.Readed = true
+	imgInfo.Md5 = hex.EncodeToString(hashInBytes)
+	imgInfo.Readed = true
 }

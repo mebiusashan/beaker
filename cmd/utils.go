@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"path"
 	"regexp"
 	"strings"
 
@@ -25,4 +26,17 @@ func FindImageURL(markdown []byte) []common.ImgInfo {
 	}
 
 	return imgurls
+}
+
+func convMarkdownImage(markdown []byte, mdPath string) (string, []common.ImgInfo) {
+	imgPaths := FindImageURL(markdown)
+	mdStr := string(markdown)
+	filenameWithSuffix := path.Base(mdPath)
+	for i := 0; i < len(imgPaths); i++ {
+		imgPaths[i].Read(mdPath[0 : len(mdPath)-len(filenameWithSuffix)])
+		if imgPaths[i].Readed {
+			mdStr = strings.ReplaceAll(mdStr, imgPaths[i].Path, imgPaths[i].Md5+imgPaths[i].Suffix)
+		}
+	}
+	return mdStr, imgPaths
 }

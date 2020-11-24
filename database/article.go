@@ -1,6 +1,8 @@
 package database
 
-import "github.com/mebiusashan/beaker/common"
+import (
+	"github.com/mebiusashan/beaker/common"
+)
 
 type ArticleModelDB struct {
 	common.ArticleModel
