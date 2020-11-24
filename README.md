@@ -4,7 +4,7 @@ Beaker is a simple blog system.
 
 ## Version
 
-0.1.1
+0.2.0
 
 ## Platforms
 
