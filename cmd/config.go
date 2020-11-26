@@ -127,9 +127,11 @@ website information as the default website`,
 		Long: `When the website login expires, 
 use the login command to log in again and obtain 
 operation permissions`,
-		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			alias := args[0]
+			alias := localConfig.DefaultWebsite
+			if len(args) > 0 {
+				alias = args[0]
+			}
 			info := getWebsiteInfoWithAlias(alias)
 			login(info.HOST, addWebSiteUser, addWebSitePassword)
 		},

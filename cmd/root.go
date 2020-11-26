@@ -48,4 +48,5 @@ func init() {
 	rootCmd.AddCommand(lsCmd)
 	rootCmd.AddCommand(lwCmd)
 	rootCmd.AddCommand(completionCmd)
+	rootCmd.AddCommand(loginCmd)
 }
