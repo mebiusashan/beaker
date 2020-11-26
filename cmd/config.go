@@ -150,6 +150,25 @@ opened and edited with this editor`,
 			writeConfig()
 		},
 	}
+
+	setDefaultWebsite = &cobra.Command{
+		Use:   "defw",
+		Short: "Set default website",
+		Long: `Set an existing website in the 
+current configuration as the default website`,
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			website := args[0]
+			for i := 0; i < len(localConfig.Websites); i++ {
+				if localConfig.Websites[i].Alias == website {
+					localConfig.DefaultWebsite = website
+					writeConfig()
+					return
+				}
+			}
+			common.Err(website + " not found")
+		},
+	}
 )
 
 func init() {
@@ -170,6 +189,7 @@ func init() {
 	configCmd.AddCommand(rmWebsiteCmd)
 	configCmd.AddCommand(loginCmd)
 	configCmd.AddCommand(setEditorCmd)
+	configCmd.AddCommand(setDefaultWebsite)
 }
 
 func initConfig() {
