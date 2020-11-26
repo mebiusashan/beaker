@@ -2,10 +2,6 @@
 
 Beaker is a simple blog system.
 
-## Version
-
-0.2.0
-
 ## Platforms
 
 - Linux

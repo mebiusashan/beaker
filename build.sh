@@ -71,6 +71,6 @@ cp -r $WORKSPACE/static ./
 cp -r $WORKSPACE/temp ./
 
 cd $WORKSPACE/bin
-tar -czvf beaker-v0.2.0-cli.tar.gz ./cli
-tar -czvf beaker-v0.2.0--linux-amd64.tar.gz ./linux
-tar -czvf beaker-v0.2.0-darwin-amd64.tar.gz ./darwin
+tar -czvf beaker-v0.3.0-cli.tar.gz ./cli
+tar -czvf beaker-v0.3.0--linux-amd64.tar.gz ./linux
+tar -czvf beaker-v0.3.0-darwin-amd64.tar.gz ./darwin
