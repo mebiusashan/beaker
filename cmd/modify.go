@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -66,6 +67,8 @@ article title and category`,
 			id, err := strconv.Atoi(args[0])
 			common.Assert(err)
 			mdStr := ""
+			curPath := ""
+			var imgs []common.ImgInfo
 			if !modifyIgnoreContent {
 				curPath, err := os.Getwd()
 				common.Assert(err)
@@ -77,10 +80,10 @@ article title and category`,
 				//edit file complete, push file
 				newContent, err := ioutil.ReadFile(curPath)
 				common.Assert(err)
-				mdStr, imgs := convMarkdownImage(newContent, curPath)
+				mdStr, imgs = convMarkdownImage(newContent, curPath)
 			}
 			cli.ArtModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyCatId, modifyTitle, mdStr, imgs)
-			if modifyDelFile {
+			if !modifyIgnoreContent && modifyDelFile {
 				err = os.Remove(curPath)
 				common.Assert(err)
 			}
@@ -102,6 +105,8 @@ page title`,
 			id, err := strconv.Atoi(args[0])
 			common.Assert(err)
 			mdStr := ""
+			curPath := ""
+			var imgs []common.ImgInfo
 			if !modifyIgnoreContent {
 				curPath, err := os.Getwd()
 				common.Assert(err)
@@ -113,10 +118,10 @@ page title`,
 				//edit file complete, push file
 				newContent, err := ioutil.ReadFile(curPath)
 				common.Assert(err)
-				mdStr, imgs := convMarkdownImage(newContent, curPath)
+				mdStr, imgs = convMarkdownImage(newContent, curPath)
 			}
 			cli.PageModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyTitle, mdStr, imgs)
-			if modifyDelFile {
+			if !modifyIgnoreContent && modifyDelFile {
 				err = os.Remove(curPath)
 				common.Assert(err)
 			}
@@ -149,9 +154,11 @@ func runEditor(path string) {
 	if localConfig.Editor != "" {
 		editor = localConfig.Editor
 	}
+	fmt.Println(editor, path)
 	oscmd := exec.Command(editor, path)
 	oscmd.Stdin = os.Stdin
 	oscmd.Stdout = os.Stdout
 	err := oscmd.Run()
+	fmt.Println(err)
 	common.Assert(err)
 }
