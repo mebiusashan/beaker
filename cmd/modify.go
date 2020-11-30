@@ -12,10 +12,11 @@ import (
 )
 
 var (
-	modifyCatId    uint
-	modifyCatAlias string
-	modifyTitle    string
-	modifyDelFile  bool
+	modifyCatId         uint
+	modifyCatAlias      string
+	modifyTitle         string
+	modifyDelFile       bool
+	modifyIgnoreContent bool
 
 	modifyCmd = &cobra.Command{
 		Use:   "modify",
@@ -64,17 +65,20 @@ article title and category`,
 			checkWebsite()
 			id, err := strconv.Atoi(args[0])
 			common.Assert(err)
-			curPath, err := os.Getwd()
-			common.Assert(err)
-			title, content := cli.ArtDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
-			curPath = curPath + "/" + title + ".md"
-			err = ioutil.WriteFile(curPath, []byte(content), 0666)
-			common.Assert(err)
-			runEditor(curPath)
-			//edit file complete, push file
-			newContent, err := ioutil.ReadFile(curPath)
-			common.Assert(err)
-			mdStr, imgs := convMarkdownImage(newContent, curPath)
+			mdStr := ""
+			if !modifyIgnoreContent {
+				curPath, err := os.Getwd()
+				common.Assert(err)
+				title, content := cli.ArtDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
+				curPath = curPath + "/" + title + ".md"
+				err = ioutil.WriteFile(curPath, []byte(content), 0666)
+				common.Assert(err)
+				runEditor(curPath)
+				//edit file complete, push file
+				newContent, err := ioutil.ReadFile(curPath)
+				common.Assert(err)
+				mdStr, imgs := convMarkdownImage(newContent, curPath)
+			}
 			cli.ArtModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyCatId, modifyTitle, mdStr, imgs)
 			if modifyDelFile {
 				err = os.Remove(curPath)
@@ -97,17 +101,20 @@ page title`,
 			checkWebsite()
 			id, err := strconv.Atoi(args[0])
 			common.Assert(err)
-			curPath, err := os.Getwd()
-			common.Assert(err)
-			title, content := cli.PageDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
-			curPath = curPath + "/" + title + ".md"
-			err = ioutil.WriteFile(curPath, []byte(content), 0666)
-			common.Assert(err)
-			runEditor(curPath)
-			//edit file complete, push file
-			newContent, err := ioutil.ReadFile(curPath)
-			common.Assert(err)
-			mdStr, imgs := convMarkdownImage(newContent, curPath)
+			mdStr := ""
+			if !modifyIgnoreContent {
+				curPath, err := os.Getwd()
+				common.Assert(err)
+				title, content := cli.PageDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
+				curPath = curPath + "/" + title + ".md"
+				err = ioutil.WriteFile(curPath, []byte(content), 0666)
+				common.Assert(err)
+				runEditor(curPath)
+				//edit file complete, push file
+				newContent, err := ioutil.ReadFile(curPath)
+				common.Assert(err)
+				mdStr, imgs := convMarkdownImage(newContent, curPath)
+			}
 			cli.PageModify(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id), modifyTitle, mdStr, imgs)
 			if modifyDelFile {
 				err = os.Remove(curPath)
@@ -126,9 +133,11 @@ func init() {
 	modifyArtCmd.PersistentFlags().UintVarP(&modifyCatId, "catid", "i", 0, "category ID of the article")
 	modifyArtCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the article")
 	modifyArtCmd.PersistentFlags().BoolVarP(&modifyDelFile, "del", "d", false, "Delete locally cached markdown files")
+	modifyArtCmd.PersistentFlags().BoolVarP(&modifyIgnoreContent, "ignore", "g", false, "Ignore content")
 
 	modifyPageCmd.PersistentFlags().StringVarP(&modifyTitle, "title", "t", "", "title of the page")
 	modifyPageCmd.PersistentFlags().BoolVarP(&modifyDelFile, "del", "d", false, "Delete locally cached markdown files")
+	modifyPageCmd.PersistentFlags().BoolVarP(&modifyIgnoreContent, "ignore", "g", false, "Ignore content")
 
 	modifyCmd.AddCommand(modifyArtCmd)
 	modifyCmd.AddCommand(modifyCatCmd)
