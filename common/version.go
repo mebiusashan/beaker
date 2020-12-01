@@ -1,3 +1,3 @@
 package common
 
-const VERSION string = "v0.3.0"
+const VERSION string = "v0.4.0"
