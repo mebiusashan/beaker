@@ -23,6 +23,11 @@ list according to the flag, and the server will
 return all the corresponding data`,
 		Run: func(cmd *cobra.Command, args []string) {
 			checkWebsite()
+			if !articlels && !pagels && !tweetls && !categoryls && !optionls {
+				cmd.Help()
+				return
+			}
+
 			if articlels {
 				cli.ArtAll(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey())
 			}
