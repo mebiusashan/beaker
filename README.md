@@ -1,6 +1,6 @@
 # Beaker
 
-Beaker is a simple blog system.
+Beaker is a small and fast blog system written in GO language.
 
 ## Platforms
 
