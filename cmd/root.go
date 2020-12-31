@@ -18,7 +18,7 @@ At the same time, Beaker advocates using markdown
 to edit articles and manage your blog through the 
 terminal. It is completely open source, you can 
 add and modify functions at will, and its source 
-code can be accessed at https://github.com/mebiusashan/beaker.`,
+code can be accessed at https://beaker.ashan.org.`,
 	}
 )
 
