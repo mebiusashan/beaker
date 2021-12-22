@@ -6,6 +6,7 @@ Beaker is a small and fast blog system written in GO language.
 
 - Linux
 - MacOS
+- Windows (Only Client)
 
 ## Install
 
