@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"runtime"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 )
@@ -25,11 +27,14 @@ code can be accessed at https://beaker.ashan.org.`,
 // Execute executes the root command.
 func Execute() error {
 	rootCmd.DisableAutoGenTag = true
-	header := &doc.GenManHeader{
-		Title:   "Beaker",
-		Section: "1",
+	sysType := runtime.GOOS
+	if sysType != "windows" {
+		header := &doc.GenManHeader{
+			Title:   "Beaker",
+			Section: "1",
+		}
+		doc.GenManTree(rootCmd, header, "/usr/local/share/man/man1")
 	}
-	doc.GenManTree(rootCmd, header, "/usr/local/share/man/man1")
 	return rootCmd.Execute()
 }
 
