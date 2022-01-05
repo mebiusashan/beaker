@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 type ImgInfo struct {
@@ -21,7 +22,7 @@ type ImgInfo struct {
 func (imgInfo *ImgInfo) Read(parentPath string) {
 	filenameWithSuffix := path.Base(imgInfo.Path)
 	imgInfo.Suffix = path.Ext(filenameWithSuffix)
-	filePath := parentPath + "/" + imgInfo.Path
+	filePath := filepath.Join(parentPath, imgInfo.Path)
 	file, err := os.Open(filePath)
 	if err != nil {
 		return

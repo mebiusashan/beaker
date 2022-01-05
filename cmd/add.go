@@ -3,6 +3,7 @@ package cmd
 import (
 	"io/ioutil"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/mebiusashan/beaker/cli"
@@ -46,7 +47,7 @@ ID of the classification to which the chapter belongs`,
 			common.Assert(err)
 			title := addArticleTitle
 			if title == "" {
-				filenameWithSuffix := path.Base(mdPath)
+				filenameWithSuffix := filepath.Base(mdPath)
 				fileSuffix := path.Ext(filenameWithSuffix)
 				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 			}
@@ -73,7 +74,7 @@ ID of the classification to which the chapter belongs`,
 			common.Assert(err)
 			title := addArticleTitle
 			if title == "" {
-				filenameWithSuffix := path.Base(mdPath)
+				filenameWithSuffix := filepath.Base(mdPath)
 				fileSuffix := path.Ext(filenameWithSuffix)
 				title = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 			}
