@@ -16,6 +16,4 @@
 
 .DS_Store
 
-bin/
 .idea/
-test/
