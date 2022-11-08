@@ -39,8 +39,8 @@ mysql>CREATE DATEBASE beaker;
 You need have install folder in you server, like `/beaker`. If you want install beaker to `/www/blog`, Run command in terminal:
 
 ```
-cd /beaker
-./install.sh
+cd /beaker/build
+./setup.sh
 Beaker
 Please input your MySQL HOST:
 localhost

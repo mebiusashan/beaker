@@ -36,8 +36,8 @@ read Domain
 
 mysql -h$MySQL_Host –u$MySQL_Name –p$MySQL_Password –D$MySql_Database<./beaker.sql
 
-cp ./config.toml $ServerPath
-cp ./admin.toml $ServerPath
+cp ../configs/config.toml $ServerPath
+cp ../configs/admin.toml $ServerPath
 mkdir $ServerPath/keys
 
 # config.toml
@@ -63,7 +63,7 @@ sed -i 's/-DB_USER/'$MySQL_Name'/g' $ServerPath/admin.toml
 sed -i 's/-DB_PW/'$MySQL_Password'/g' $ServerPath/admin.toml
 sed -i 's/-DB_NAME/'$MySql_Database'/g' $ServerPath/admin.toml
 
-cp -r ./temp $ServerPath
-cp -r ./static $ServerPath
-cp ./beaker_admin $ServerPath
-cp ./beaker_server $ServerPath
+cp -r ./temp $ServerPath#
+cp -r ../web/static $ServerPath
+# cp ./beaker_admin $ServerPath
+# cp ./beaker_server $ServerPath
