@@ -25,7 +25,7 @@ func (ct *ArticleController) Do(c *gin.Context) {
 	}
 
 	markdownWithUnixLineEndings := strings.Replace(arts.Content, "\r\n", "\n", -1)
-	bodyStr := string(blackfriday.Run([]byte(markdownWithUnixLineEndings)))
+	bodyStr := string(blackfriday.MarkdownBasic([]byte(markdownWithUnixLineEndings)))
 	vars := ct.Context.View.GetVarMap()
 	vars.Set("body", bodyStr)
 	vars.Set("title", arts.Title)
