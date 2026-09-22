@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
-
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/internal/common"
 )
@@ -12,9 +10,14 @@ type ArticleController struct {
 }
 
 func (ct *ArticleController) Add(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.ArticleModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
+	if data.Title == "" || data.Catid == 0 {
+		writeFail(c, "title and category ID are required")
+		return
+	}
 	cat, err := ct.Context.Model.CategoryFindByID(data.Catid)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -32,9 +35,10 @@ func (ct *ArticleController) Add(c *gin.Context) {
 }
 
 func (ct *ArticleController) Del(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.ArticleModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	err := ct.Context.Model.ArticleDel(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -51,9 +55,10 @@ func (ct *ArticleController) All(c *gin.Context) {
 }
 
 func (ct *ArticleController) Down(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.ArticleModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	art, err := ct.Context.Model.ArticleFindByID(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -62,9 +67,10 @@ func (ct *ArticleController) Down(c *gin.Context) {
 }
 
 func (ct *ArticleController) Modify(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.ArticleModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	data.Content = writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
 	err := ct.Context.Model.ArticleUpdate(data.ID, &data)
 	if hasErrorWriteFail(c, err) {

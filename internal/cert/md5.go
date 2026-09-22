@@ -10,7 +10,7 @@ func MD5String(data string) string {
 	return MD5(d)
 }
 
-//md5加密
+// md5加密
 func MD5(data []byte) string {
 	m := md5.New()
 	m.Write(data)

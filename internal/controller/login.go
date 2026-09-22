@@ -1,10 +1,14 @@
 package controller
 
 import (
+	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
+	"io"
+	"net/http"
+	"os"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -21,140 +25,153 @@ type LoginInfo struct {
 	createTime int64
 }
 
-var loginInfo *LoginInfo
+var sessions = struct {
+	sync.RWMutex
+	values map[string]LoginInfo
+}{values: make(map[string]LoginInfo)}
 
-func GetLoginInfo() *LoginInfo {
-	if loginInfo == nil {
-		loginInfo = new(LoginInfo)
+func newSession(key string) string {
+	buf := make([]byte, 32)
+	if _, err := rand.Read(buf); err != nil {
+		return ""
 	}
-	return loginInfo
+	token := hex.EncodeToString(buf)
+	sessions.Lock()
+	sessions.values[token] = LoginInfo{loginKey: key, createTime: time.Now().Unix()}
+	sessions.Unlock()
+	return token
 }
 
-func (l *LoginInfo) setKey(key string) {
-	l.loginKey = key
-	l.createTime = time.Now().Unix()
-}
-
-func (l *LoginInfo) CheckExpired(exTime int64) bool {
-	if time.Now().Unix()-l.createTime >= exTime {
-		l.loginKey = ""
-		return true
+func sessionKey(token string, expire int64) (string, bool) {
+	if token == "" {
+		return "", false
 	}
-	return false
+	sessions.RLock()
+	info, ok := sessions.values[token]
+	sessions.RUnlock()
+	if !ok || time.Now().Unix()-info.createTime >= expire {
+		sessions.Lock()
+		delete(sessions.values, token)
+		sessions.Unlock()
+		return "", false
+	}
+	return info.loginKey, true
 }
 
 func (ct *LoginController) Ping(c *gin.Context) {
-	pubKey, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
+	pubKey, err := os.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorResponse(c, http.StatusInternalServerError, common.ErrorCodeInternal, err)
 		return
 	}
 	writeSucc(c, "", cert.Base64Encode(pubKey))
 }
 
 func (ct *LoginController) Login(c *gin.Context) {
-	pri, err := ioutil.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PRIVATE_KEY)
+	pri, err := os.ReadFile(ct.Context.Config.AuthInfo.ServerKeyDir + common.SERVER_PRIVATE_KEY)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorResponse(c, http.StatusInternalServerError, common.ErrorCodeInternal, err)
 		return
 	}
 
-	data, err := ioutil.ReadAll(c.Request.Body)
+	data, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeInvalidRequest, err.Error())
 		return
 	}
 
 	data, err = cert.Base64Decode(string(data))
 	if err != nil {
-		fmt.Println("error:", err)
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "invalid login payload")
 		return
 	}
 
 	var jsonData common.LoginReq
 	err = json.Unmarshal(data, &jsonData)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeInvalidRequest, err.Error())
 		return
 	}
 
 	if jsonData.UN == ct.Context.Config.AuthInfo.Name {
 		pw := cert.MD5([]byte(ct.Context.Config.AuthInfo.Password))
 		if pw == jsonData.PW {
-			//账号正确
-			//从redis里度des key，没有就创建
-			//用dk，加密 des key，发回去
-			desKey := GetLoginInfo().loginKey
-			if desKey == "" {
-				key := cert.CreateDesKey()
-				desKey = base64.StdEncoding.EncodeToString(key)
-				GetLoginInfo().setKey(desKey)
+			key := cert.CreateDesKey()
+			if len(key) == 0 {
+				ErrorFromCode(c, http.StatusInternalServerError, common.ErrorCodeInternal, "failed to create session key")
+				return
 			}
-
-			key, _ := base64.StdEncoding.DecodeString(desKey)
+			desKey := base64.StdEncoding.EncodeToString(key)
 			clientDesKey64, err := cert.Base64Decode(jsonData.DK)
 			if err != nil {
-				writeFail(c, "Decoding failed"+err.Error())
+				ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "Decoding failed")
 				return
 			}
 
 			clientDesKey, err := cert.RSADecrypt(pri, []byte(clientDesKey64))
 			if err != nil {
-				writeFail(c, "Decoding failed"+err.Error())
+				ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "Decoding failed")
 				return
 			}
 
 			serverDesKeyM, err := cert.TripleDesEncrypt(key, clientDesKey)
 			if err != nil {
-				writeFail(c, "Decoding failed"+err.Error())
+				ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "Decoding failed")
 				return
 			}
 
 			serverDesKey64 := cert.Base64Encode(serverDesKeyM)
-			writeSucc(c, "", serverDesKey64)
+			resp := new(common.SuccMsgResp)
+			resp.Code = common.SUCC
+			resp.RequestID = requestID(c)
+			resp.Data = serverDesKey64
+			resp.SessionToken = newSession(desKey)
+			if resp.SessionToken == "" {
+				ErrorFromCode(c, http.StatusInternalServerError, common.ErrorCodeInternal, "failed to create session")
+				return
+			}
+			c.JSON(http.StatusOK, resp)
+			return
 		}
 	}
-	if err != nil {
-		writeFail(c, "error")
-		return
-	}
+	ErrorFromCode(c, http.StatusUnauthorized, common.ErrorCodeUnauthorized, "invalid username or password")
 }
 
 func (ct *LoginController) Check(c *gin.Context) {
-	data, err := ioutil.ReadAll(c.Request.Body)
+	data, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeInvalidRequest, err.Error())
 		return
 	}
 
-	desKey := GetLoginInfo().loginKey
-	if desKey == "" || GetLoginInfo().CheckExpired(ct.Context.Config.AuthInfo.EXPIRE_TIME) {
-		writeFail(c, "Need Login")
+	desKey, ok := sessionKey(c.GetHeader("X-Beaker-Session"), ct.Context.Config.AuthInfo.EXPIRE_TIME)
+	if !ok {
+		ErrorFromCode(c, http.StatusUnauthorized, common.ErrorCodeUnauthorized, "Need Login")
 		return
 	}
 
 	key, err := base64.StdEncoding.DecodeString(desKey)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 		return
 	}
 
 	data64, err := cert.Base64Decode(string(data))
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 		return
 	}
 
 	sl, err := cert.TripleDesDecrypt(data64, key)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 		return
 	}
 
 	sl123 := string(sl) + "123"
 	rel, err := cert.TripleDesEncrypt([]byte(sl123), key)
 	if err != nil {
-		writeFail(c, err.Error())
+		ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 		return
 	}
 

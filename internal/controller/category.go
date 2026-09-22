@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
-
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/internal/common"
 )
@@ -12,9 +10,10 @@ type CategoryController struct {
 }
 
 func (ct *CategoryController) Add(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.CatModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	if data.Name == "" || data.Alias == "" {
 		writeFail(c, "Null values ​​are not allowed")
 		return
@@ -31,9 +30,10 @@ func (ct *CategoryController) Add(c *gin.Context) {
 }
 
 func (ct *CategoryController) Del(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.CatRmReq{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	mcat, err := ct.Context.Model.CategoryFindByID(data.MvID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -62,9 +62,10 @@ func (ct *CategoryController) All(c *gin.Context) {
 }
 
 func (ct *CategoryController) Update(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.CatModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	if data.Alias == "static" {
 		writeFail(c, "static is a reserved word")
 		return

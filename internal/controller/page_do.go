@@ -2,11 +2,9 @@ package controller
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/internal/common"
-	"github.com/russross/blackfriday"
 )
 
 func (ct *PageController) Do(c *gin.Context) {
@@ -25,8 +23,7 @@ func (ct *PageController) Do(c *gin.Context) {
 		return
 	}
 
-	markdownWithUnixLineEndings := strings.Replace(page.Content, "\r\n", "\n", -1)
-	bodyStr := string(blackfriday.MarkdownBasic([]byte(markdownWithUnixLineEndings)))
+	bodyStr := renderMarkdown(page.Content)
 	vars := ct.Context.View.GetVarMap()
 	vars.Set("body", bodyStr)
 	vars.Set("title", page.Title)

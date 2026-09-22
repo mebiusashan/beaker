@@ -1,4 +1,5 @@
 package xrsa
+
 import (
 	"bytes"
 	"crypto"
@@ -11,16 +12,19 @@ import (
 	"errors"
 	"io"
 )
+
 const (
-	CHAR_SET = "UTF-8"
-	BASE_64_FORMAT = "UrlSafeNoPadding"
+	CHAR_SET               = "UTF-8"
+	BASE_64_FORMAT         = "UrlSafeNoPadding"
 	RSA_ALGORITHM_KEY_TYPE = "PKCS8"
-	RSA_ALGORITHM_SIGN = crypto.SHA256
+	RSA_ALGORITHM_SIGN     = crypto.SHA256
 )
+
 type XRsa struct {
-	publicKey *rsa.PublicKey
+	publicKey  *rsa.PublicKey
 	privateKey *rsa.PrivateKey
 }
+
 // 生成密钥对
 func CreateKeys(publicKeyWriter, privateKeyWriter io.Writer, keyLength int) error {
 	// 生成私钥文件
@@ -73,17 +77,18 @@ func NewXRsa(publicKey []byte, privateKey []byte) (*XRsa, error) {
 	}
 	pri, ok := priv.(*rsa.PrivateKey)
 	if ok {
-		return &XRsa {
-			publicKey: pub,
+		return &XRsa{
+			publicKey:  pub,
 			privateKey: pri,
 		}, nil
 	} else {
 		return nil, errors.New("private key not supported")
 	}
 }
+
 // 公钥加密
 func (r *XRsa) PublicEncrypt(data string) (string, error) {
-	partLen := r.publicKey.N.BitLen() / 8 - 11
+	partLen := r.publicKey.N.BitLen()/8 - 11
 	chunks := split([]byte(data), partLen)
 	buffer := bytes.NewBufferString("")
 	for _, chunk := range chunks {
@@ -95,6 +100,7 @@ func (r *XRsa) PublicEncrypt(data string) (string, error) {
 	}
 	return base64.RawURLEncoding.EncodeToString(buffer.Bytes()), nil
 }
+
 // 私钥解密
 func (r *XRsa) PrivateDecrypt(encrypted string) (string, error) {
 	partLen := r.publicKey.N.BitLen() / 8
@@ -110,6 +116,7 @@ func (r *XRsa) PrivateDecrypt(encrypted string) (string, error) {
 	}
 	return buffer.String(), err
 }
+
 // 数据加签
 func (r *XRsa) Sign(data string) (string, error) {
 	h := RSA_ALGORITHM_SIGN.New()
@@ -121,6 +128,7 @@ func (r *XRsa) Sign(data string) (string, error) {
 	}
 	return base64.RawURLEncoding.EncodeToString(sign), err
 }
+
 // 数据验签
 func (r *XRsa) Verify(data string, sign string) error {
 	h := RSA_ALGORITHM_SIGN.New()

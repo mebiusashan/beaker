@@ -13,9 +13,10 @@ import (
 )
 
 type websiteConfig struct {
-	Alias string
-	HOST  string
-	Key   string
+	Alias        string
+	HOST         string
+	Key          string
+	SessionToken string
 }
 
 type config struct {
@@ -26,6 +27,10 @@ type config struct {
 
 func (c *websiteConfig) GetKey() []byte {
 	return []byte(c.Key)
+}
+
+func (c *websiteConfig) GetSessionToken() string {
+	return c.SessionToken
 }
 
 var (
@@ -212,6 +217,7 @@ func checkWebsite() {
 	if len(localConfig.Websites) == 0 {
 		common.Err("No website information is configured")
 	}
+	cli.SetSessionToken(getWebsiteInfo().GetSessionToken())
 	// info := getWebsiteInfo()
 	// rel := cli.Check(info.HOST, []byte(info.Key))
 	// if !rel {
@@ -245,6 +251,7 @@ func login(url string, username string, password string) {
 	pubKey := cli.Ping(url)
 	serverPubKey := cli.Login(url, pubKey, username, password)
 	if cli.Check(url, serverPubKey) {
+		sessionToken := cli.SessionToken()
 		if len(localConfig.Websites) == 0 || localConfig.Websites == nil {
 			localConfig.Websites = make([]websiteConfig, 0)
 			addWebSiteIsDefault = true
@@ -257,12 +264,13 @@ func login(url string, username string, password string) {
 			v := localConfig.Websites[i]
 			if v.HOST == url {
 				localConfig.Websites[i].Key = string(serverPubKey)
+				localConfig.Websites[i].SessionToken = sessionToken
 				writeConfig()
 				return
 			}
 		}
 
-		d := websiteConfig{Alias: addWebSiteAlias, HOST: url, Key: string(serverPubKey)}
+		d := websiteConfig{Alias: addWebSiteAlias, HOST: url, Key: string(serverPubKey), SessionToken: sessionToken}
 		localConfig.Websites = append(localConfig.Websites, d)
 		writeConfig()
 	} else {

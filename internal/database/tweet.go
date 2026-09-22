@@ -12,8 +12,13 @@ func (TweetModelDB) TableName() string {
 
 func (d *Dao) TweetFindByNum(page uint, num uint) ([]TweetModelDB, error) {
 	var tw []TweetModelDB
-	count := 0
-	d.mysql.Model(&TweetModelDB{}).Count(&count)
+	if page == 0 || num == 0 {
+		return tw, nil
+	}
+	count := uint(0)
+	if err := d.mysql.Model(&TweetModelDB{}).Count(&count).Error; err != nil {
+		return tw, err
+	}
 	if count == 0 {
 		return tw, nil
 	}
@@ -21,10 +26,10 @@ func (d *Dao) TweetFindByNum(page uint, num uint) ([]TweetModelDB, error) {
 	return tw, err
 }
 
-func (d *Dao) TweetCount() uint {
+func (d *Dao) TweetCount() (uint, error) {
 	var count uint = 0
-	d.mysql.Table("tweets").Count(&count)
-	return count
+	err := d.mysql.Table("tweets").Count(&count).Error
+	return count, err
 }
 
 func (d *Dao) TweetAdd(content string) error {

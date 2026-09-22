@@ -9,16 +9,21 @@ import (
 
 func (ct *TweetController) Do(c *gin.Context) {
 	numOfOnePage := ct.Context.Config.Website.TWEET_NUM_ONE_PAGE
-	twCount := ct.Context.Model.TweetCount()
-	twCount = uint(math.Ceil(float64(twCount) / float64(numOfOnePage)))
-	twpages := ct.createPageNum(twCount)
+	twCount, err := ct.Context.Model.TweetCount()
+	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
+		return
+	}
+	totalPages := uint(math.Ceil(float64(twCount) / float64(numOfOnePage)))
+	twpages := ct.createPageNum(totalPages)
 	page := ct.convParam(c.Param("page"))
-	if page > twCount {
-		page = twCount
+	if totalPages == 0 {
+		page = 1
+	} else if page > totalPages {
+		page = totalPages
 	}
 
 	tws, err := ct.Context.Model.TweetFindByNum(page, numOfOnePage)
-	if hasErrDo404(c, ct.Context.Ctrl.ErrC, err) {
+	if hasErrDo500(c, ct.Context.Ctrl.ErrC, err) {
 		return
 	}
 

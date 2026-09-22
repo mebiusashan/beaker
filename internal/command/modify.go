@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -74,11 +73,11 @@ article title and category`,
 				common.Assert(err)
 				title, content := cli.ArtDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 				curPath = curPath + "/" + title + ".md"
-				err = ioutil.WriteFile(curPath, []byte(content), 0666)
+				err = os.WriteFile(curPath, []byte(content), 0666)
 				common.Assert(err)
 				runEditor(curPath)
 				//edit file complete, push file
-				newContent, err := ioutil.ReadFile(curPath)
+				newContent, err := os.ReadFile(curPath)
 				common.Assert(err)
 				mdStr, imgs = convMarkdownImage(newContent, curPath)
 			}
@@ -112,11 +111,11 @@ page title`,
 				common.Assert(err)
 				title, content := cli.PageDownload(getWebsiteInfo().HOST, refresh, getWebsiteInfo().GetKey(), uint(id))
 				curPath = curPath + "/" + title + ".md"
-				err = ioutil.WriteFile(curPath, []byte(content), 0666)
+				err = os.WriteFile(curPath, []byte(content), 0666)
 				common.Assert(err)
 				runEditor(curPath)
 				//edit file complete, push file
-				newContent, err := ioutil.ReadFile(curPath)
+				newContent, err := os.ReadFile(curPath)
 				common.Assert(err)
 				mdStr, imgs = convMarkdownImage(newContent, curPath)
 			}

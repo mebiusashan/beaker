@@ -1,25 +1,28 @@
 package common
 
 type BaseRespMsg struct {
-	Code int `json:"code"`
-	Data interface{}
+	Code      int         `json:"code"`
+	ErrorCode string      `json:"errorCode,omitempty"`
+	RequestID string      `json:"requestId,omitempty"`
+	Data      interface{} `json:"data,omitempty"`
 }
 
 type BaseReqMsg struct {
-	Refresh bool
-	Data    interface{}
+	Refresh bool        `json:"refresh"`
+	Data    interface{} `json:"data"`
 }
 
 type SuccMsgResp struct {
 	BaseRespMsg
-	Msg string `json:"msg"`
+	Msg          string `json:"msg"`
+	SessionToken string `json:"sessionToken,omitempty"`
 }
 
 type LoginReq struct {
 	BaseReqMsg
-	DK string
-	UN string
-	PW string
+	DK string `json:"dk"`
+	UN string `json:"un"`
+	PW string `json:"pw"`
 }
 
 type LoginResp struct {

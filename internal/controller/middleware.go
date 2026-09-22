@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"io/ioutil"
+	"io"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/internal/cert"
@@ -14,50 +15,55 @@ import (
 
 func LoginExpiredCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if GetLoginInfo().CheckExpired(config.AuthEXPIRE_TIME) {
-			writeFail(c, "Need Login")
-			c.Abort()
+		if tokenKey, ok := sessionKey(c.GetHeader("X-Beaker-Session"), config.AuthEXPIRE_TIME); ok {
+			c.Set("adminLoginKey", tokenKey)
+			c.Next()
 			return
 		}
-		c.Next()
+		ErrorFromCode(c, http.StatusUnauthorized, common.ErrorCodeUnauthorized, "Need Login")
+		c.Abort()
+		return
 	}
 }
 
 func DecodeForAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		data, err := ioutil.ReadAll(c.Request.Body)
+		data, err := io.ReadAll(c.Request.Body)
 		if err != nil {
-			writeFail(c, err.Error())
+			ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, err.Error())
 			c.Abort()
 			return
 		}
-		desKey := GetLoginInfo().loginKey
+		desKey := ""
+		if value, ok := c.Get("adminLoginKey"); ok {
+			desKey, _ = value.(string)
+		}
 		key, err := base64.StdEncoding.DecodeString(desKey)
 		if err != nil {
-			writeFail(c, "No credit request")
+			ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 			c.Abort()
 			return
 		}
 
 		data64, err := cert.Base64Decode(string(data))
 		if err != nil {
-			writeFail(c, "No credit request")
+			ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 			c.Abort()
 			return
 		}
 
 		sl, err := cert.TripleDesDecrypt(data64, key)
 		if err != nil {
-			writeFail(c, "No credit request")
+			ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeDecode, "No credit request")
 			c.Abort()
 			return
 		}
 
-		c.Request.Body = ioutil.NopCloser(bytes.NewReader(sl))
+		c.Request.Body = io.NopCloser(bytes.NewReader(sl))
 		var postData common.BaseReqMsg
 		err = c.BindJSON(&postData)
 		if err != nil {
-			writeFail(c, err.Error())
+			ErrorFromCode(c, http.StatusBadRequest, common.ErrorCodeInvalidRequest, err.Error())
 			c.Abort()
 			return
 		}
@@ -72,7 +78,11 @@ func RefreshCache() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		value, has := c.Get("refresh")
 		if has && value.(bool) {
-			controllerContext.Cache.ClearAll()
+			if err := controllerContext.Cache.ClearAll(); err != nil {
+				ErrorResponse(c, http.StatusInternalServerError, common.ErrorCodeCache, err)
+				c.Abort()
+				return
+			}
 		}
 		c.Next()
 	}

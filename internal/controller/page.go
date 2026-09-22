@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
-
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/internal/common"
 )
@@ -12,9 +10,14 @@ type PageController struct {
 }
 
 func (ct *PageController) Add(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.PageModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
+	if data.Title == "" {
+		writeFail(c, "title is required")
+		return
+	}
 	md := writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
 	err := ct.Context.Model.PageAdd(data.Title, md)
 	if hasErrorWriteFail(c, err) {
@@ -24,9 +27,10 @@ func (ct *PageController) Add(c *gin.Context) {
 	writeSucc(c, "Page added successfully", nil)
 }
 func (ct *PageController) Del(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.PageModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	err := ct.Context.Model.PageDel(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -43,9 +47,10 @@ func (ct *PageController) List(c *gin.Context) {
 }
 
 func (ct *PageController) Down(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.PageModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	page, err := ct.Context.Model.PageFindByID(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -54,9 +59,10 @@ func (ct *PageController) Down(c *gin.Context) {
 }
 
 func (ct *PageController) Modify(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.PageModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	data.Content = writeMarkdownImage(ct.Context.Config.Server, data.Content, data.Imgs)
 	err := ct.Context.Model.PageUpdate(data.ID, &data)
 	if hasErrorWriteFail(c, err) {

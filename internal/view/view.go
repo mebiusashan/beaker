@@ -3,6 +3,7 @@ package view
 import (
 	"bytes"
 	"reflect"
+	"sync"
 	"time"
 
 	"github.com/CloudyKit/jet"
@@ -15,6 +16,9 @@ type ViewRender struct {
 	_SITE_DES      string
 	_SITE_FOOTER   string
 	_SITE_KEYWORDS string
+	set            *jet.Set
+	initOnce       sync.Once
+	initErr        error
 }
 
 func NewViewRender(templateFolder string) *ViewRender {
@@ -43,13 +47,19 @@ func (r *ViewRender) GetVarMap() jet.VarMap {
 }
 
 func (r *ViewRender) Render(templateName string, vars jet.VarMap) (string, error) {
-	viewManage := jet.NewHTMLSet(r.templateFolder)
-	t, err := viewManage.GetTemplate(templateName)
+	r.initOnce.Do(func() {
+		r.set = jet.NewHTMLSet(r.templateFolder)
+		r.addTimepFunc(r.set)
+		r.addTTimepFunc(r.set)
+		_, r.initErr = r.set.GetTemplate(templateName)
+	})
+	if r.initErr != nil {
+		return "", r.initErr
+	}
+	t, err := r.set.GetTemplate(templateName)
 	if err != nil {
 		return "", err
 	}
-	r.addTimepFunc(viewManage)
-	r.addTTimepFunc(viewManage)
 	var w bytes.Buffer
 	if err = t.Execute(&w, vars, nil); err != nil {
 		return "", err

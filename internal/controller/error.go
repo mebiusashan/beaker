@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mebiusashan/beaker/internal/common"
@@ -24,8 +24,7 @@ func (ct *ErrerController) Do404(c *gin.Context) {
 	vars.Set("title", "404")
 	str, err := ct.Context.View.Render(common.TEMPLATE_NotFound, vars)
 	if err != nil {
-		fmt.Println(err)
-		ct.Do500(c)
+		ErrorResponse(c, http.StatusInternalServerError, common.ErrorCodeInternal, err)
 		return
 	}
 
@@ -35,5 +34,5 @@ func (ct *ErrerController) Do404(c *gin.Context) {
 }
 
 func (ct *ErrerController) Do500(c *gin.Context) {
-	c.String(500, "500 Server Error")
+	ErrorFromCode(c, http.StatusInternalServerError, common.ErrorCodeInternal, "500 Server Error")
 }

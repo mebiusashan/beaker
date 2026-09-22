@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
 	"math"
 	"strconv"
 
@@ -35,9 +34,14 @@ func (ct *TweetController) createPageNum(count uint) []uint {
 }
 
 func (ct *TweetController) Add(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.TweetModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
+	if data.Content == "" {
+		writeFail(c, "tweet content is required")
+		return
+	}
 	err := ct.Context.Model.TweetAdd(data.Content)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -46,9 +50,10 @@ func (ct *TweetController) Add(c *gin.Context) {
 }
 
 func (ct *TweetController) Del(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.TweetModel{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	err := ct.Context.Model.TweetDel(data.ID)
 	if hasErrorWriteFail(c, err) {
 		return
@@ -57,19 +62,31 @@ func (ct *TweetController) Del(c *gin.Context) {
 }
 
 func (ct *TweetController) List(c *gin.Context) {
-	value, _ := c.Get("data")
 	data := common.TweetListResp{}
-	json.Unmarshal(value.([]byte), &data)
+	if !decodeAdminData(c, &data) {
+		return
+	}
 	var page uint = 1
 	if data.CurPage >= 1 {
 		page = data.CurPage
 	}
 
-	twNums := ct.Context.Model.TweetCount()
+	twNums, err := ct.Context.Model.TweetCount()
+	if hasErrorWriteFail(c, err) {
+		return
+	}
 	data.TweNum = twNums
-	twNums = uint(math.Ceil(float64(twNums) / float64(10)))
-	if page > twNums {
-		page = twNums
+	totalPages := uint(math.Ceil(float64(twNums) / float64(10)))
+	if totalPages == 0 {
+		data.Code = common.SUCC
+		data.CurPage = 1
+		data.TotlePage = 0
+		data.List = []common.TweetModel{}
+		writeSucc(c, "", data)
+		return
+	}
+	if page > totalPages {
+		page = totalPages
 	}
 
 	tws, err := ct.Context.Model.TweetFindByNum(page, 10)
@@ -84,9 +101,9 @@ func (ct *TweetController) List(c *gin.Context) {
 		ts = append(ts, t)
 	}
 
-	data.Code = 0
+	data.Code = common.SUCC
 	data.CurPage = page
-	data.TotlePage = twNums
+	data.TotlePage = totalPages
 	data.List = ts
 
 	writeSucc(c, "", data)

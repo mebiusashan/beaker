@@ -1,7 +1,9 @@
 package main
 
 import (
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/mebiusashan/beaker/internal/cache"
 	"github.com/mebiusashan/beaker/internal/common"
@@ -44,6 +46,9 @@ func RunServer(isRelease bool) {
 	}
 
 	router := gin.Default()
+	router.Use(controller.RequestID())
+	router.Use(controller.BodyLimit(10 << 20))
+	router.Use(controller.Recovery())
 	router.Static("/static", config.Server.STATIC_FILE_FOLDER)
 	router.StaticFile("/b.css", config.Server.STATIC_FILE_FOLDER+"/b.css")
 	router.StaticFile("/favicon.ico", config.Server.STATIC_FILE_FOLDER+"/favicon.ico")
@@ -57,5 +62,14 @@ func RunServer(isRelease bool) {
 	router.NoMethod(context.Ctrl.ErrC.Do404)
 	router.NoRoute(context.Ctrl.ErrC.Do404)
 
-	router.Run(config.Server.URL + config.Server.PORT)
+	server := &http.Server{
+		Addr:              config.Server.URL + config.Server.PORT,
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20,
+	}
+	common.Assert(server.ListenAndServe())
 }

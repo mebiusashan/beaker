@@ -1,7 +1,7 @@
 package command
 
 import (
-	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -43,7 +43,7 @@ ID of the classification to which the chapter belongs`,
 				common.Err("Need to set category ID")
 			}
 			mdPath := args[0]
-			content, err := ioutil.ReadFile(mdPath)
+			content, err := os.ReadFile(mdPath)
 			common.Assert(err)
 			title := addArticleTitle
 			if title == "" {
@@ -70,7 +70,7 @@ ID of the classification to which the chapter belongs`,
 			checkWebsite()
 
 			mdPath := args[0]
-			content, err := ioutil.ReadFile(mdPath)
+			content, err := os.ReadFile(mdPath)
 			common.Assert(err)
 			title := addArticleTitle
 			if title == "" {

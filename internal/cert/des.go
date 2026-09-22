@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"crypto/cipher"
 	"crypto/des"
-	"math/rand"
+	crand "crypto/rand"
+	"errors"
 )
 
 func CreateDesKey() []byte {
 	key := make([]byte, 24)
-	rand.Read(key)
+	if _, err := crand.Read(key); err != nil {
+		return nil
+	}
 	return key
 }
 
@@ -18,6 +21,9 @@ func TripleDesEncrypt(origData, key []byte) ([]byte, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
+	}
+	if len(key) < block.BlockSize() {
+		return nil, errors.New("invalid key size")
 	}
 	origData = PKCS5Padding(origData, block.BlockSize())
 	// origData = ZeroPadding(origData, block.BlockSize())
@@ -33,11 +39,17 @@ func TripleDesDecrypt(crypted, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(key) < block.BlockSize() || len(crypted) == 0 || len(crypted)%block.BlockSize() != 0 {
+		return nil, errors.New("invalid ciphertext")
+	}
 	blockMode := cipher.NewCBCDecrypter(block, key[:8])
 	origData := make([]byte, len(crypted))
 	// origData := crypted
 	blockMode.CryptBlocks(origData, crypted)
-	origData = PKCS5UnPadding(origData)
+	origData, err = PKCS5UnPadding(origData)
+	if err != nil {
+		return nil, err
+	}
 	// origData = ZeroUnPadding(origData)
 	return origData, nil
 }
@@ -48,14 +60,19 @@ func PKCS5Padding(cipherText []byte, blockSize int) []byte {
 	return append(cipherText, padText...)
 }
 
-func PKCS5UnPadding(src []byte) []byte {
+func PKCS5UnPadding(src []byte) ([]byte, error) {
 	//length := len(origData)
 	//// 去掉最后一个字节 unpadding 次
 	//unpadding := int(origData[length-1])
 	//fmt.Println("长度", length)
 	//return origData[:(length - unpadding)]
 	length := len(src)
-	//fmt.Println("测试长度",length, src[length-1])
+	if length == 0 {
+		return nil, errors.New("invalid padding")
+	}
 	unpadding := int(src[length-1])
-	return src[:(length - unpadding)]
+	if unpadding <= 0 || unpadding > length {
+		return nil, errors.New("invalid padding")
+	}
+	return src[:(length - unpadding)], nil
 }

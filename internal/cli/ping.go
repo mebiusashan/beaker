@@ -11,7 +11,7 @@ import (
 func Ping(host string) []byte {
 	jsonData := net.PostJson(host+net.CLI_PING, strings.NewReader(""))
 
-	pubKeyStr := jsonData.Data.(string)
+	pubKeyStr := responseString(jsonData.Data, "public key")
 	pubkey, err := cert.Base64Decode(pubKeyStr)
 	common.Assert(err)
 	return pubkey

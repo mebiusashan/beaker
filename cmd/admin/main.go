@@ -1,8 +1,9 @@
 package main
 
 import (
-	"io/ioutil"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/mebiusashan/beaker/internal/cache"
 	"github.com/mebiusashan/beaker/internal/cert"
@@ -44,16 +45,16 @@ func RunAdmin(isRelease bool) {
 	if !pubHas || !priHas {
 		pub, pri, err := cert.CreateRSAKeys()
 		common.Assert(err)
-		err = ioutil.WriteFile(config.AuthInfo.ServerKeyDir+common.SERVER_PUBLIC_KEY, pub, 0666)
+		err = os.WriteFile(config.AuthInfo.ServerKeyDir+common.SERVER_PUBLIC_KEY, pub, 0600)
 		common.Assert(err)
-		err = ioutil.WriteFile(config.AuthInfo.ServerKeyDir+common.SERVER_PRIVATE_KEY, pri, 0666)
+		err = os.WriteFile(config.AuthInfo.ServerKeyDir+common.SERVER_PRIVATE_KEY, pri, 0600)
 		common.Assert(err)
 	}
 
-	pub, err := ioutil.ReadFile(config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
+	pub, err := os.ReadFile(config.AuthInfo.ServerKeyDir + common.SERVER_PUBLIC_KEY)
 	common.Assert(err)
 
-	pri, err := ioutil.ReadFile(config.AuthInfo.ServerKeyDir + common.SERVER_PRIVATE_KEY)
+	pri, err := os.ReadFile(config.AuthInfo.ServerKeyDir + common.SERVER_PRIVATE_KEY)
 	common.Assert(err)
 
 	rel := cert.CheckRSAKey(pub, pri)
@@ -66,6 +67,9 @@ func RunAdmin(isRelease bool) {
 	}
 
 	router := gin.Default()
+	router.Use(controller.RequestID())
+	router.Use(controller.BodyLimit(10 << 20))
+	router.Use(controller.Recovery())
 
 	//登录
 	user := router.Group(net.ADMIN_GROUP_USER)
@@ -102,5 +106,14 @@ func RunAdmin(isRelease bool) {
 	adminr.POST(net.ADMIN_OPT, context.Ctrl.OptC.Info)
 	adminr.POST(net.ADMIN_CLEAN, context.Ctrl.OptC.ClearCache)
 
-	router.Run(config.Server.PORT)
+	server := &http.Server{
+		Addr:              config.Server.URL + config.Server.PORT,
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20,
+	}
+	common.Assert(server.ListenAndServe())
 }
