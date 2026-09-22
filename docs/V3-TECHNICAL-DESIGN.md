@@ -83,12 +83,13 @@ v3 管理端登录成功后会返回：
 
 ## 依赖说明
 
-当前离线环境已验证可构建的安全升级为：
+已在可访问 Go module proxy 的环境中执行依赖升级和 `go mod tidy`，当前锁定版本为：
 
-- `golang.org/x/net v0.25.0`
-- `golang.org/x/crypto v0.23.0`
-- `golang.org/x/sys v0.20.0`
-- `golang.org/x/text v0.15.0`
-- `google.golang.org/protobuf v1.34.1`
+- `github.com/gin-gonic/gin v1.12.0`
+- `golang.org/x/net v0.59.0`
+- `golang.org/x/crypto v0.57.0`
+- `golang.org/x/sys v0.48.0`
+- `golang.org/x/text v0.42.0`
+- `google.golang.org/protobuf v1.36.12`
 
-由于当前机器无法访问 `proxy.golang.org`，Gin 和 `golang.org/x/net` 的最新版本需要在有网络的环境继续执行 `go mod tidy`、`go test ./...` 和 `govulncheck ./...` 后再最终锁定。
+已验证 `GOCACHE=/tmp/beaker-gocache go test ./...` 通过。发布前仍建议在 CI 中继续执行 `go test -race ./...`、`go vet ./...` 和 `govulncheck ./...`。

@@ -11,7 +11,7 @@ This checklist tracks the security, quality, performance, and CLI behavior work 
 ## Completed in this change
 
 - [x] Lock Go version in `go.mod` with `go 1.27` and `toolchain go1.27.1`.
-- [x] Upgrade cached vulnerable transitive dependencies available in the local module cache: `golang.org/x/net`, `golang.org/x/crypto`, `golang.org/x/sys`, `golang.org/x/text`, and protobuf.
+- [x] Upgrade vulnerable dependencies to current available versions: Gin `v1.12.0`, `golang.org/x/net v0.59.0`, `golang.org/x/crypto v0.57.0`, `golang.org/x/sys v0.48.0`, `golang.org/x/text v0.42.0`, and protobuf `v1.36.12`.
 - [x] Add stable server-to-CLI error codes: `BEAKER-400`, `BEAKER-401`, `BEAKER-404`, `BEAKER-500-DB`, `BEAKER-500-CACHE`, `BEAKER-500`, `BEAKER-400-DECODE`, `BEAKER-CLI-NETWORK`, `BEAKER-CLI-HTTP`, and `BEAKER-CLI-RESPONSE`.
 - [x] Make CLI failures exit with a non-zero status.
 - [x] Make CLI errors directly print `Error Code`, `Description`, `Detail`, and `Request ID` in the terminal.
@@ -33,10 +33,10 @@ This checklist tracks the security, quality, performance, and CLI behavior work 
 - [x] `gofmt -w cmd internal`
 - [x] `git diff --check`
 - [x] `GOCACHE=/tmp/beaker-gocache go test ./...`
-- [ ] In a network-enabled environment, run `go mod tidy` to refresh `go.sum` after final dependency upgrades.
-- [ ] In a network-enabled environment, run `go test -race ./...`.
-- [ ] In a network-enabled environment, run `go vet ./...`.
-- [ ] In a network-enabled environment, run `govulncheck ./...`.
+- [x] `go mod tidy` after final dependency upgrades.
+- [x] `GOCACHE=/tmp/beaker-gocache go test -race ./...`.
+- [x] `go vet ./...`.
+- [ ] `govulncheck ./...` was not run because `govulncheck` is not installed on this machine.
 - [ ] Re-check GitHub Dependabot after pushing `v3dev`.
 
 ## CLI Error Output Acceptance Example
@@ -50,7 +50,6 @@ Request ID: f1c2...
 
 ## Remaining Follow-Up Work
 
-- [ ] Upgrade Gin and `golang.org/x/net` again to the newest versions allowed by Go 1.27.1 once module proxy access is available, then commit the refreshed `go.sum`.
 - [ ] Replace the legacy MD5 password check with a password hash migration plan. This likely needs a MySQL-compatible strategy, so it was not done in this change.
 - [ ] Replace 3DES request encryption with TLS-only session auth or an AEAD protocol in a later breaking release.
 - [ ] Add integration tests for login, expired session, bad ciphertext, database error, Redis error, and malformed server response.
