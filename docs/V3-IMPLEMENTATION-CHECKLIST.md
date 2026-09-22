@@ -11,7 +11,7 @@ This checklist tracks the security, quality, performance, and CLI behavior work 
 ## Completed in this change
 
 - [x] Lock Go version in `go.mod` with `go 1.27` and `toolchain go1.27.1`.
-- [x] Upgrade vulnerable dependencies to current available versions: Gin `v1.12.0`, `golang.org/x/net v0.59.0`, `golang.org/x/crypto v0.57.0`, `golang.org/x/sys v0.48.0`, `golang.org/x/text v0.42.0`, and protobuf `v1.36.12`.
+- [x] Upgrade vulnerable dependencies to current available versions: Gin `v1.12.0`, `github.com/quic-go/quic-go v0.59.1`, `golang.org/x/net v0.59.0`, `golang.org/x/crypto v0.57.0`, `golang.org/x/sys v0.48.0`, `golang.org/x/text v0.42.0`, and protobuf `v1.36.12`.
 - [x] Add stable server-to-CLI error codes: `BEAKER-400`, `BEAKER-401`, `BEAKER-404`, `BEAKER-500-DB`, `BEAKER-500-CACHE`, `BEAKER-500`, `BEAKER-400-DECODE`, `BEAKER-CLI-NETWORK`, `BEAKER-CLI-HTTP`, and `BEAKER-CLI-RESPONSE`.
 - [x] Make CLI failures exit with a non-zero status.
 - [x] Make CLI errors directly print `Error Code`, `Description`, `Detail`, and `Request ID` in the terminal.
@@ -36,7 +36,7 @@ This checklist tracks the security, quality, performance, and CLI behavior work 
 - [x] `go mod tidy` after final dependency upgrades.
 - [x] `GOCACHE=/tmp/beaker-gocache go test -race ./...`.
 - [x] `go vet ./...`.
-- [ ] `govulncheck ./...` was not run because `govulncheck` is not installed on this machine.
+- [x] `GOCACHE=/tmp/beaker-gocache govulncheck ./...` completed with no vulnerabilities affecting this code.
 - [ ] Re-check GitHub Dependabot after pushing `v3dev`.
 
 ## CLI Error Output Acceptance Example

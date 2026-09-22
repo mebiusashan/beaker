@@ -86,10 +86,11 @@ v3 管理端登录成功后会返回：
 已在可访问 Go module proxy 的环境中执行依赖升级和 `go mod tidy`，当前锁定版本为：
 
 - `github.com/gin-gonic/gin v1.12.0`
+- `github.com/quic-go/quic-go v0.59.1`
 - `golang.org/x/net v0.59.0`
 - `golang.org/x/crypto v0.57.0`
 - `golang.org/x/sys v0.48.0`
 - `golang.org/x/text v0.42.0`
 - `google.golang.org/protobuf v1.36.12`
 
-已验证 `GOCACHE=/tmp/beaker-gocache go test ./...` 通过。发布前仍建议在 CI 中继续执行 `go test -race ./...`、`go vet ./...` 和 `govulncheck ./...`。
+已验证 `GOCACHE=/tmp/beaker-gocache go test ./...`、`GOCACHE=/tmp/beaker-gocache go test -race ./...`、`go vet ./...` 和 `govulncheck ./...` 通过。`govulncheck` 当前报告没有影响本代码的漏洞。
