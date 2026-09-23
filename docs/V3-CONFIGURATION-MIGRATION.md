@@ -39,6 +39,8 @@ MySQL 库结构不能动，本次变更没有新增 migration，也没有修改 
 
 线上 Redis 可以清理缓存内容。
 
+本次 Markdown 修复已经将文章和页面缓存 tag 从 `arc_` / `pag_` 升级为 `arc_v2_` / `pag_v2_`。重新部署后会自动绕过旧的错误渲染缓存；仍建议发布时清理 Beaker 前缀缓存，避免旧 key 长时间占用 Redis。
+
 v3 之前的风险：清缓存使用 `FLUSHALL`，会清掉同一个 Redis 实例里的所有业务 key。
 
 v3 行为：清缓存只扫描并删除：

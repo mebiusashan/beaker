@@ -21,8 +21,10 @@ const (
 	ErrorCodeInvalidResponse = "BEAKER-CLI-RESPONSE"
 )
 
-const TAG_ARCHIVE string = "arc_"
-const TAG_PAGE string = "pag_"
+// The v2 suffix invalidates HTML generated before the Markdown renderer
+// enabled tables and fenced code blocks.
+const TAG_ARCHIVE string = "arc_v2_"
+const TAG_PAGE string = "pag_v2_"
 const TAG_HOME string = "home_"
 const TAG_CAT string = "cat_"
 const TAG_NOTFOUND string = "404_"

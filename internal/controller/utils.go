@@ -121,7 +121,16 @@ func renderMarkdown(content string) string {
 		"",
 		"",
 	)
-	return string(blackfriday.Markdown([]byte(markdownWithUnixLineEndings), renderer, 0))
+	extensions := blackfriday.EXTENSION_NO_INTRA_EMPHASIS |
+		blackfriday.EXTENSION_TABLES |
+		blackfriday.EXTENSION_FENCED_CODE |
+		blackfriday.EXTENSION_AUTOLINK |
+		blackfriday.EXTENSION_STRIKETHROUGH |
+		blackfriday.EXTENSION_SPACE_HEADERS |
+		blackfriday.EXTENSION_HEADER_IDS |
+		blackfriday.EXTENSION_BACKSLASH_LINE_BREAK |
+		blackfriday.EXTENSION_DEFINITION_LISTS
+	return string(blackfriday.Markdown([]byte(markdownWithUnixLineEndings), renderer, extensions))
 }
 
 func hasCacheWriteBody(c *gin.Context, cache *cache.Cache, tag string, key string) bool {

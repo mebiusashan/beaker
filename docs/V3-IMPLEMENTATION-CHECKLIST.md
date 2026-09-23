@@ -23,7 +23,8 @@ This checklist tracks the security, quality, performance, and CLI behavior work 
 - [x] Change cache clearing from `FLUSHALL` to deleting only keys under `REDIS_PREFIX`.
 - [x] Cache Jet template sets instead of rebuilding them for every render.
 - [x] Add image upload validation for filename, suffix, detected MIME type, max 5 MB size, and atomic write.
-- [x] Render article/page Markdown with raw HTML/style skipped and safe-link filtering enabled.
+- [x] Render article/page Markdown with raw HTML/style skipped, safe-link filtering enabled, and common extensions restored for tables and fenced code blocks.
+- [x] Add a Markdown regression test for fenced code, tables, and raw script filtering.
 - [x] Fix tweet empty-list pagination so page zero does not underflow database offsets.
 - [x] Validate admin JSON decode errors consistently instead of silently writing zero values.
 - [x] Avoid crashes on invalid 3DES ciphertext and use cryptographic random bytes for session keys.

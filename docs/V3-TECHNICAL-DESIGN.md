@@ -63,7 +63,7 @@ v3 管理端登录成功后会返回：
 - HTTP Server 增加 `ReadHeaderTimeout`、`ReadTimeout`、`WriteTimeout`、`IdleTimeout` 和 `MaxHeaderBytes`，降低慢请求和异常连接风险。
 - Gin 增加 request id、请求体大小限制和 panic recovery 中间件。
 - 图片上传只接受固定后缀和匹配 MIME，最大 5 MB，写入使用临时文件后原子 rename。
-- Markdown 渲染跳过原始 HTML 和 style，并启用 safe-link 过滤，降低存储型 XSS 风险。
+- Markdown 渲染跳过原始 HTML 和 style，并启用 safe-link 过滤，降低存储型 XSS 风险；同时保留表格、三反引号 fenced code、自动链接、删除线等原有常用扩展。
 - 3DES 解密遇到畸形密文时返回错误，不再 panic。
 - session key 使用 `crypto/rand` 生成。
 
@@ -73,6 +73,7 @@ v3 管理端登录成功后会返回：
 - Jet 模板集合缓存到 `ViewRender`，避免每次渲染重新扫描模板目录。
 - Redis 清理改为按 `REDIS_PREFIX` 扫描删除，避免 `FLUSHALL` 阻塞并误清其他业务。
 - Tweet 空列表分页不再访问 page 0，避免无意义查询和 offset 下溢。
+- 文章和页面缓存 tag 升级为 `arc_v2_` / `pag_v2_`，避免继续命中旧 Markdown renderer 生成的错误 HTML。
 
 ## 数据兼容
 
